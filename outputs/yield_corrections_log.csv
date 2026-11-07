@@ -1,27 +1,73 @@
-record_key,field,old_value,new_value,rule,source
-farm_survey:FS00236,yield_t_ha,288.8,28.88,above 3x crop median; treated as a x10 decimal slip,farm_survey_fi.csv
-farm_survey:FS00237,yield_t_ha,369.5,36.95,above 3x crop median; treated as a x10 decimal slip,farm_survey_fi.csv
-farm_survey:FS00388,yield_t_ha,43.1,4.31,above 3x crop median; treated as a x10 decimal slip,farm_survey_fi.csv
-farm_survey:FS00604,yield_t_ha,31.1,3.11,above 3x crop median; treated as a x10 decimal slip,farm_survey_fi.csv
-farm_survey:FS00778,yield_t_ha,286.9,28.69,above 3x crop median; treated as a x10 decimal slip,farm_survey_fi.csv
-farm_survey:FS00919,yield_t_ha,27.3,2.73,above 3x crop median; treated as a x10 decimal slip,farm_survey_fi.csv
-farm_survey:FS00932,yield_t_ha,31.9,3.19,above 3x crop median; treated as a x10 decimal slip,farm_survey_fi.csv
-farm_survey:FS01267,yield_t_ha,21.9,2.19,above 3x crop median; treated as a x10 decimal slip,farm_survey_fi.csv
-farm_survey:FS01375,yield_t_ha,30.0,3.0,above 3x crop median; treated as a x10 decimal slip,farm_survey_fi.csv
-farm_survey:FS01726,yield_t_ha,14.0,1.4,above 3x crop median; treated as a x10 decimal slip,farm_survey_fi.csv
-farm_survey:FS01779,yield_t_ha,14.7,1.47,above 3x crop median; treated as a x10 decimal slip,farm_survey_fi.csv
-farm_survey:FS01912,yield_t_ha,15.7,1.57,above 3x crop median; treated as a x10 decimal slip,farm_survey_fi.csv
-farm_survey:FS02059,yield_t_ha,12.4,1.24,above 3x crop median; treated as a x10 decimal slip,farm_survey_fi.csv
-farm_survey:FS02104,yield_t_ha,11.8,1.18,above 3x crop median; treated as a x10 decimal slip,farm_survey_fi.csv
-farm_survey:FS02175,yield_t_ha,9.7,0.97,above 3x crop median; treated as a x10 decimal slip,farm_survey_fi.csv
-farm_survey:FS02248,yield_t_ha,14.8,1.48,above 3x crop median; treated as a x10 decimal slip,farm_survey_fi.csv
-farm_survey:FS02315,yield_t_ha,21.5,2.15,above 3x crop median; treated as a x10 decimal slip,farm_survey_fi.csv
-farm_survey:FS03324,yield_t_ha,14.7,1.47,above 3x crop median; treated as a x10 decimal slip,farm_survey_fi.csv
-erp_delivery:F0046:carrot:2024,yield_t_ha,0.052,,ERP-derived yield outside 0.35-2.2x crop-year median; excluded,erp_purchase_lines_2021_2025.csv
-erp_delivery:F0100:potato:2025,yield_t_ha,0.033,,ERP-derived yield outside 0.35-2.2x crop-year median; excluded,erp_purchase_lines_2021_2025.csv
-erp_delivery:F0131:pea:2024,yield_t_ha,0.004,,ERP-derived yield outside 0.35-2.2x crop-year median; excluded,erp_purchase_lines_2021_2025.csv
-erp_delivery:F0146:pea:2022,yield_t_ha,0.003,,ERP-derived yield outside 0.35-2.2x crop-year median; excluded,erp_purchase_lines_2021_2025.csv
-erp_delivery:F0173:turnip_rape:2025,yield_t_ha,0.001,,ERP-derived yield outside 0.35-2.2x crop-year median; excluded,erp_purchase_lines_2021_2025.csv
-erp_delivery:F0202:turnip_rape:2023,yield_t_ha,0.001,,ERP-derived yield outside 0.35-2.2x crop-year median; excluded,erp_purchase_lines_2021_2025.csv
-erp_delivery:F0217:turnip_rape:2021,yield_t_ha,0.001,,ERP-derived yield outside 0.35-2.2x crop-year median; excluded,erp_purchase_lines_2021_2025.csv
-erp_delivery:F0244:turnip_rape:2023,yield_t_ha,0.002,,ERP-derived yield outside 0.35-2.2x crop-year median; excluded,erp_purchase_lines_2021_2025.csv
+record_key,field,old_value,new_value,rule,source,used_for_yield
+farm_survey:FS00236,yield_t_ha,288.8,28.88,above 3x crop median; treated as a x10 decimal slip,farm_survey_fi.csv,True
+farm_survey:FS00237,yield_t_ha,369.5,36.95,above 3x crop median; treated as a x10 decimal slip,farm_survey_fi.csv,True
+farm_survey:FS00388,yield_t_ha,43.1,4.31,above 3x crop median; treated as a x10 decimal slip,farm_survey_fi.csv,True
+farm_survey:FS00604,yield_t_ha,31.1,3.11,above 3x crop median; treated as a x10 decimal slip,farm_survey_fi.csv,True
+farm_survey:FS00778,yield_t_ha,286.9,28.69,above 3x crop median; treated as a x10 decimal slip,farm_survey_fi.csv,True
+farm_survey:FS00919,yield_t_ha,27.3,2.73,above 3x crop median; treated as a x10 decimal slip,farm_survey_fi.csv,True
+farm_survey:FS00932,yield_t_ha,31.9,3.19,above 3x crop median; treated as a x10 decimal slip,farm_survey_fi.csv,True
+farm_survey:FS01267,yield_t_ha,21.9,2.19,above 3x crop median; treated as a x10 decimal slip,farm_survey_fi.csv,True
+farm_survey:FS01375,yield_t_ha,30.0,3.0,above 3x crop median; treated as a x10 decimal slip,farm_survey_fi.csv,True
+farm_survey:FS01726,yield_t_ha,14.0,1.4,above 3x crop median; treated as a x10 decimal slip,farm_survey_fi.csv,True
+farm_survey:FS01779,yield_t_ha,14.7,1.47,above 3x crop median; treated as a x10 decimal slip,farm_survey_fi.csv,True
+farm_survey:FS01912,yield_t_ha,15.7,1.57,above 3x crop median; treated as a x10 decimal slip,farm_survey_fi.csv,True
+farm_survey:FS02059,yield_t_ha,12.4,1.24,above 3x crop median; treated as a x10 decimal slip,farm_survey_fi.csv,True
+farm_survey:FS02104,yield_t_ha,11.8,1.18,above 3x crop median; treated as a x10 decimal slip,farm_survey_fi.csv,True
+farm_survey:FS02175,yield_t_ha,9.7,0.97,above 3x crop median; treated as a x10 decimal slip,farm_survey_fi.csv,True
+farm_survey:FS02248,yield_t_ha,14.8,1.48,above 3x crop median; treated as a x10 decimal slip,farm_survey_fi.csv,True
+farm_survey:FS02315,yield_t_ha,21.5,2.15,above 3x crop median; treated as a x10 decimal slip,farm_survey_fi.csv,True
+farm_survey:FS03324,yield_t_ha,14.7,1.47,above 3x crop median; treated as a x10 decimal slip,farm_survey_fi.csv,True
+erp:4500000010:10,quantity,8.1873,8187.3,"unit price 1000x the crop-year contract price; tonnes keyed as kg, quantity x1000",erp_purchase_lines_2021_2025.csv,False
+erp:4500000067:10,quantity,24.3608,24360.8,"unit price 1000x the crop-year contract price; tonnes keyed as kg, quantity x1000",erp_purchase_lines_2021_2025.csv,True
+erp:4500000039:10,quantity,25.5886,25588.6,"unit price 1000x the crop-year contract price; tonnes keyed as kg, quantity x1000",erp_purchase_lines_2021_2025.csv,False
+erp:4500000118:10,quantity,17.5276,17527.6,"unit price 1000x the crop-year contract price; tonnes keyed as kg, quantity x1000",erp_purchase_lines_2021_2025.csv,False
+erp:4500000043:10,quantity,4303.025,43030.25,"unit price 10x the crop-year contract price; decimal slip, quantity x10",erp_purchase_lines_2021_2025.csv,False
+erp:4500000013:10,quantity,110734.47,11073.447,"unit price 0.1x the crop-year contract price; decimal slip, quantity /10",erp_purchase_lines_2021_2025.csv,False
+erp:4500002173:10,quantity,40.9251,40925.1,"unit price 1000x the crop-year contract price; tonnes keyed as kg, quantity x1000",erp_purchase_lines_2021_2025.csv,True
+erp:4500002048:10,quantity,75.9323,75932.3,"unit price 1000x the crop-year contract price; tonnes keyed as kg, quantity x1000",erp_purchase_lines_2021_2025.csv,False
+erp:4500002105:10,quantity,463943.216,46394.322,"unit price 0.1x the crop-year contract price; decimal slip, quantity /10",erp_purchase_lines_2021_2025.csv,False
+erp:4500002104:10,quantity,486756.511,48675.651,"unit price 0.1x the crop-year contract price; decimal slip, quantity /10",erp_purchase_lines_2021_2025.csv,False
+erp:4500001455:10,quantity,46.9687,46968.7,"unit price 1000x the crop-year contract price; tonnes keyed as kg, quantity x1000",erp_purchase_lines_2021_2025.csv,False
+erp:4500003573:10,quantity,46.1388,46138.8,"unit price 1000x the crop-year contract price; tonnes keyed as kg, quantity x1000",erp_purchase_lines_2021_2025.csv,False
+erp:4500003035:10,quantity,1057.47,10574.7,"unit price 10x the crop-year contract price; decimal slip, quantity x10",erp_purchase_lines_2021_2025.csv,False
+erp:4500002976:10,quantity,120546.69,12054.669,"unit price 0.1x the crop-year contract price; decimal slip, quantity /10",erp_purchase_lines_2021_2025.csv,False
+erp:4500002962:10,quantity,39.616,39616.0,"unit price 1000x the crop-year contract price; tonnes keyed as kg, quantity x1000",erp_purchase_lines_2021_2025.csv,True
+erp:4500002920:10,quantity,21.3427,21342.7,"unit price 1000x the crop-year contract price; tonnes keyed as kg, quantity x1000",erp_purchase_lines_2021_2025.csv,True
+erp:4500003002:10,quantity,203941.33,20394.133,"unit price 0.1x the crop-year contract price; decimal slip, quantity /10",erp_purchase_lines_2021_2025.csv,False
+erp:4500003005:10,quantity,3596.808,35968.08,"unit price 10x the crop-year contract price; decimal slip, quantity x10",erp_purchase_lines_2021_2025.csv,False
+erp:4500005061:10,quantity,40.6081,40608.1,"unit price 1000x the crop-year contract price; tonnes keyed as kg, quantity x1000",erp_purchase_lines_2021_2025.csv,True
+erp:4500004924:10,quantity,68.6382,68638.2,"unit price 1000x the crop-year contract price; tonnes keyed as kg, quantity x1000",erp_purchase_lines_2021_2025.csv,False
+erp:4500005060:10,quantity,115.7623,115762.3,"unit price 1000x the crop-year contract price; tonnes keyed as kg, quantity x1000",erp_purchase_lines_2021_2025.csv,False
+erp:4500005054:10,quantity,31.0139,31013.9,"unit price 1000x the crop-year contract price; tonnes keyed as kg, quantity x1000",erp_purchase_lines_2021_2025.csv,False
+erp:4500004512:10,quantity,372839.62,37283.962,"unit price 0.1x the crop-year contract price; decimal slip, quantity /10",erp_purchase_lines_2021_2025.csv,False
+erp:4500004389:10,quantity,24.5813,24581.3,"unit price 1000x the crop-year contract price; tonnes keyed as kg, quantity x1000",erp_purchase_lines_2021_2025.csv,False
+erp:4500004960:10,quantity,528.7072,528707.2,"unit price 1000x the crop-year contract price; tonnes keyed as kg, quantity x1000",erp_purchase_lines_2021_2025.csv,True
+erp:4500006028:10,quantity,34.0618,34061.8,"unit price 1000x the crop-year contract price; tonnes keyed as kg, quantity x1000",erp_purchase_lines_2021_2025.csv,False
+erp:4500006016:10,quantity,616.476,6164.76,"unit price 10x the crop-year contract price; decimal slip, quantity x10",erp_purchase_lines_2021_2025.csv,False
+erp:4500005837:10,quantity,32.3517,32351.7,"unit price 1000x the crop-year contract price; tonnes keyed as kg, quantity x1000",erp_purchase_lines_2021_2025.csv,True
+erp:4500005860:10,quantity,17.9761,17976.1,"unit price 1000x the crop-year contract price; tonnes keyed as kg, quantity x1000",erp_purchase_lines_2021_2025.csv,False
+erp:4500006547:10,quantity,224865.735,2248657.35,"unit price 10x the crop-year contract price; decimal slip, quantity x10",erp_purchase_lines_2021_2025.csv,False
+erp:4500006495:10,quantity,869.9548,869954.8,"unit price 1000x the crop-year contract price; tonnes keyed as kg, quantity x1000",erp_purchase_lines_2021_2025.csv,True
+erp:5100000152:10,quantity,56811.0452825,,"repeat posting of the same goods receipt (same lot, quantity and amount); excluded",erp_purchase_lines_2021_2025.csv,False
+erp:5100000151:10,quantity,9460.446,,"repeat posting of the same goods receipt (same lot, quantity and amount); excluded",erp_purchase_lines_2021_2025.csv,True
+erp:5100000256:10,quantity,39798.7120104,,"repeat posting of the same goods receipt (same lot, quantity and amount); excluded",erp_purchase_lines_2021_2025.csv,False
+erp:5100000254:10,quantity,57556.422999999995,,"repeat posting of the same goods receipt (same lot, quantity and amount); excluded",erp_purchase_lines_2021_2025.csv,False
+erp:5100000252:10,quantity,20474.161,,"repeat posting of the same goods receipt (same lot, quantity and amount); excluded",erp_purchase_lines_2021_2025.csv,False
+erp:5100000259:10,quantity,63304.482948,,"repeat posting of the same goods receipt (same lot, quantity and amount); excluded",erp_purchase_lines_2021_2025.csv,False
+erp:5100000260:10,quantity,19904.781000000003,,"repeat posting of the same goods receipt (same lot, quantity and amount); excluded",erp_purchase_lines_2021_2025.csv,False
+erp:5100000351:10,quantity,26460.286,,"repeat posting of the same goods receipt (same lot, quantity and amount); excluded",erp_purchase_lines_2021_2025.csv,False
+erp:5100000459:10,quantity,101776.6663654,,"repeat posting of the same goods receipt (same lot, quantity and amount); excluded",erp_purchase_lines_2021_2025.csv,False
+erp:5100000458:10,quantity,26160.301999999996,,"repeat posting of the same goods receipt (same lot, quantity and amount); excluded",erp_purchase_lines_2021_2025.csv,False
+erp:5100000452:10,quantity,328367.1335832,,"repeat posting of the same goods receipt (same lot, quantity and amount); excluded",erp_purchase_lines_2021_2025.csv,False
+erp:5100000556:10,quantity,328657.601464,,"repeat posting of the same goods receipt (same lot, quantity and amount); excluded",erp_purchase_lines_2021_2025.csv,False
+erp:5100000203:10,quantity,-1712.047,,"return to supplier is a legitimate credit, but the goods were harvested; not subtracted from the yield",erp_purchase_lines_2021_2025.csv,False
+erp:5100000204:10,quantity,-25311.128,,"return to supplier is a legitimate credit, but the goods were harvested; not subtracted from the yield",erp_purchase_lines_2021_2025.csv,False
+erp:5100000304:10,quantity,-2155.324,,"return to supplier is a legitimate credit, but the goods were harvested; not subtracted from the yield",erp_purchase_lines_2021_2025.csv,True
+erp:5100000306:10,quantity,-9206.337,,"return to supplier is a legitimate credit, but the goods were harvested; not subtracted from the yield",erp_purchase_lines_2021_2025.csv,False
+erp:5100000302:10,quantity,-9832.15,,"return to supplier is a legitimate credit, but the goods were harvested; not subtracted from the yield",erp_purchase_lines_2021_2025.csv,False
+erp:5100000407:10,quantity,-1512.564,,"return to supplier is a legitimate credit, but the goods were harvested; not subtracted from the yield",erp_purchase_lines_2021_2025.csv,False
+erp:5100000405:10,quantity,-1377.901,,"return to supplier is a legitimate credit, but the goods were harvested; not subtracted from the yield",erp_purchase_lines_2021_2025.csv,True
+erp:5100000501:10,quantity,-6826.826,,"return to supplier is a legitimate credit, but the goods were harvested; not subtracted from the yield",erp_purchase_lines_2021_2025.csv,False
+erp:5100000503:10,quantity,-1012.414,,"return to supplier is a legitimate credit, but the goods were harvested; not subtracted from the yield",erp_purchase_lines_2021_2025.csv,False
+erp:5100000600:10,quantity,-2135.321,,"return to supplier is a legitimate credit, but the goods were harvested; not subtracted from the yield",erp_purchase_lines_2021_2025.csv,False
+erp:5100000603:10,quantity,-978.674,,"return to supplier is a legitimate credit, but the goods were harvested; not subtracted from the yield",erp_purchase_lines_2021_2025.csv,False

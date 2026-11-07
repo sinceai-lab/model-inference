@@ -1,109 +1,109 @@
 region,crop,ssp,driver,effect
 FI_SW,pea,ssp126,Drought stress,0.00337
-FI_SW,pea,ssp126,Heat,-0.00349
-FI_SW,pea,ssp126,May temperature,0.01915
-FI_SW,pea,ssp126,Rain after sowing,8e-05
-FI_SW,pea,ssp126,Rain before harvest,0.00049
-FI_SW,pea,ssp126,Season rain and evaporation,0.01381
-FI_SW,pea,ssp126,Season timing,-0.02463
-FI_SW,pea,ssp126,"Warm, wet days",-0.00235
+FI_SW,pea,ssp126,Heat,-0.0035
+FI_SW,pea,ssp126,May temperature,0.01909
+FI_SW,pea,ssp126,Rain after sowing,7e-05
+FI_SW,pea,ssp126,Rain before harvest,0.00048
+FI_SW,pea,ssp126,Season rain and evaporation,0.01387
+FI_SW,pea,ssp126,Season timing,-0.02475
+FI_SW,pea,ssp126,"Warm, wet days",-0.00238
 FI_SW,pea,ssp245,Drought stress,0.0043
-FI_SW,pea,ssp245,Heat,-0.01088
-FI_SW,pea,ssp245,May temperature,0.02932
-FI_SW,pea,ssp245,Rain after sowing,8e-05
-FI_SW,pea,ssp245,Rain before harvest,0.0005
-FI_SW,pea,ssp245,Season rain and evaporation,0.02471
-FI_SW,pea,ssp245,Season timing,-0.0399
-FI_SW,pea,ssp245,"Warm, wet days",-0.00306
-FI_SW,pea,ssp585,Drought stress,0.01858
-FI_SW,pea,ssp585,Heat,-0.03208
-FI_SW,pea,ssp585,May temperature,0.0421
-FI_SW,pea,ssp585,Rain after sowing,0.00024
-FI_SW,pea,ssp585,Rain before harvest,0.00048
-FI_SW,pea,ssp585,Season rain and evaporation,0.04014
-FI_SW,pea,ssp585,Season timing,-0.05661
-FI_SW,pea,ssp585,"Warm, wet days",-0.00359
-SE_SKANE,pea,ssp126,Drought stress,0.03672
-SE_SKANE,pea,ssp126,Heat,0.00337
+FI_SW,pea,ssp245,Heat,-0.0109
+FI_SW,pea,ssp245,May temperature,0.02924
+FI_SW,pea,ssp245,Rain after sowing,7e-05
+FI_SW,pea,ssp245,Rain before harvest,0.00052
+FI_SW,pea,ssp245,Season rain and evaporation,0.02483
+FI_SW,pea,ssp245,Season timing,-0.04007
+FI_SW,pea,ssp245,"Warm, wet days",-0.0031
+FI_SW,pea,ssp585,Drought stress,0.01857
+FI_SW,pea,ssp585,Heat,-0.03209
+FI_SW,pea,ssp585,May temperature,0.04198
+FI_SW,pea,ssp585,Rain after sowing,0.00021
+FI_SW,pea,ssp585,Rain before harvest,0.00049
+FI_SW,pea,ssp585,Season rain and evaporation,0.04034
+FI_SW,pea,ssp585,Season timing,-0.05683
+FI_SW,pea,ssp585,"Warm, wet days",-0.00363
+SE_SKANE,pea,ssp126,Drought stress,0.03674
+SE_SKANE,pea,ssp126,Heat,0.00331
 SE_SKANE,pea,ssp126,Irrigation,-0.00536
-SE_SKANE,pea,ssp126,May temperature,0.02635
-SE_SKANE,pea,ssp126,Rain after sowing,-0.00027
-SE_SKANE,pea,ssp126,Rain before harvest,0.00019
-SE_SKANE,pea,ssp126,Season rain and evaporation,0.03525
-SE_SKANE,pea,ssp126,Season timing,-0.03855
-SE_SKANE,pea,ssp126,"Warm, wet days",-0.00392
-SE_SKANE,pea,ssp245,Drought stress,0.02879
-SE_SKANE,pea,ssp245,Heat,0.00167
-SE_SKANE,pea,ssp245,Irrigation,-0.00448
-SE_SKANE,pea,ssp245,May temperature,0.03511
-SE_SKANE,pea,ssp245,Rain after sowing,-1e-05
-SE_SKANE,pea,ssp245,Rain before harvest,0.00047
-SE_SKANE,pea,ssp245,Season rain and evaporation,0.04007
-SE_SKANE,pea,ssp245,Season timing,-0.04636
-SE_SKANE,pea,ssp245,"Warm, wet days",-0.00385
-SE_SKANE,pea,ssp585,Drought stress,0.03459
-SE_SKANE,pea,ssp585,Heat,-0.01505
-SE_SKANE,pea,ssp585,Irrigation,-0.00549
-SE_SKANE,pea,ssp585,May temperature,0.04573
-SE_SKANE,pea,ssp585,Rain after sowing,-0.00013
-SE_SKANE,pea,ssp585,Rain before harvest,-0.00057
-SE_SKANE,pea,ssp585,Season rain and evaporation,0.05906
-SE_SKANE,pea,ssp585,Season timing,-0.06573
-SE_SKANE,pea,ssp585,"Warm, wet days",-0.00479
-FI_SW,potato,ssp126,Drought stress,0.01291
-FI_SW,potato,ssp126,Heat,-0.02508
-FI_SW,potato,ssp126,Irrigation,-0.00808
-FI_SW,potato,ssp126,May temperature,-0.01622
-FI_SW,potato,ssp126,Rain after sowing,-0.00111
+SE_SKANE,pea,ssp126,May temperature,0.02627
+SE_SKANE,pea,ssp126,Rain after sowing,-0.00025
+SE_SKANE,pea,ssp126,Rain before harvest,0.00018
+SE_SKANE,pea,ssp126,Season rain and evaporation,0.03543
+SE_SKANE,pea,ssp126,Season timing,-0.03866
+SE_SKANE,pea,ssp126,"Warm, wet days",-0.00397
+SE_SKANE,pea,ssp245,Drought stress,0.02883
+SE_SKANE,pea,ssp245,Heat,0.00163
+SE_SKANE,pea,ssp245,Irrigation,-0.00447
+SE_SKANE,pea,ssp245,May temperature,0.03501
+SE_SKANE,pea,ssp245,Rain after sowing,-0.0
+SE_SKANE,pea,ssp245,Rain before harvest,0.0005
+SE_SKANE,pea,ssp245,Season rain and evaporation,0.04028
+SE_SKANE,pea,ssp245,Season timing,-0.04649
+SE_SKANE,pea,ssp245,"Warm, wet days",-0.0039
+SE_SKANE,pea,ssp585,Drought stress,0.03464
+SE_SKANE,pea,ssp585,Heat,-0.01512
+SE_SKANE,pea,ssp585,Irrigation,-0.00548
+SE_SKANE,pea,ssp585,May temperature,0.0456
+SE_SKANE,pea,ssp585,Rain after sowing,-0.00014
+SE_SKANE,pea,ssp585,Rain before harvest,-0.00058
+SE_SKANE,pea,ssp585,Season rain and evaporation,0.05937
+SE_SKANE,pea,ssp585,Season timing,-0.0659
+SE_SKANE,pea,ssp585,"Warm, wet days",-0.00484
+FI_SW,potato,ssp126,Drought stress,0.01294
+FI_SW,potato,ssp126,Heat,-0.02474
+FI_SW,potato,ssp126,Irrigation,-0.00813
+FI_SW,potato,ssp126,May temperature,-0.01624
+FI_SW,potato,ssp126,Rain after sowing,-0.00115
 FI_SW,potato,ssp126,Rain before harvest,0.00393
-FI_SW,potato,ssp126,Season rain and evaporation,0.0111
-FI_SW,potato,ssp126,Season timing,0.04383
-FI_SW,potato,ssp126,"Warm, wet days",-0.00612
-FI_SW,potato,ssp245,Drought stress,-0.00228
-FI_SW,potato,ssp245,Heat,-0.05253
-FI_SW,potato,ssp245,Irrigation,-0.0021
-FI_SW,potato,ssp245,May temperature,-0.02469
+FI_SW,potato,ssp126,Season rain and evaporation,0.01105
+FI_SW,potato,ssp126,Season timing,0.04413
+FI_SW,potato,ssp126,"Warm, wet days",-0.00618
+FI_SW,potato,ssp245,Drought stress,-0.00221
+FI_SW,potato,ssp245,Heat,-0.05188
+FI_SW,potato,ssp245,Irrigation,-0.00221
+FI_SW,potato,ssp245,May temperature,-0.02474
 FI_SW,potato,ssp245,Rain after sowing,0.00048
 FI_SW,potato,ssp245,Rain before harvest,0.00405
-FI_SW,potato,ssp245,Season rain and evaporation,0.01893
-FI_SW,potato,ssp245,Season timing,0.06678
-FI_SW,potato,ssp245,"Warm, wet days",-0.00808
-FI_SW,potato,ssp585,Drought stress,-0.01088
-FI_SW,potato,ssp585,Heat,-0.08844
-FI_SW,potato,ssp585,Irrigation,0.00298
-FI_SW,potato,ssp585,May temperature,-0.03501
-FI_SW,potato,ssp585,Rain after sowing,0.00346
-FI_SW,potato,ssp585,Rain before harvest,0.00401
-FI_SW,potato,ssp585,Season rain and evaporation,0.03424
-FI_SW,potato,ssp585,Season timing,0.09068
-FI_SW,potato,ssp585,"Warm, wet days",-0.00967
-FI_SW,carrot,ssp126,Drought stress,-0.00446
-FI_SW,carrot,ssp126,Heat,-0.01756
-FI_SW,carrot,ssp126,Irrigation,-0.00265
-FI_SW,carrot,ssp126,May temperature,0.00393
-FI_SW,carrot,ssp126,Rain after sowing,-0.00013
-FI_SW,carrot,ssp126,Rain before harvest,-0.00056
-FI_SW,carrot,ssp126,Season rain and evaporation,0.00263
-FI_SW,carrot,ssp126,Season timing,0.0173
-FI_SW,carrot,ssp126,"Warm, wet days",0.00343
-FI_SW,carrot,ssp245,Drought stress,0.0035
-FI_SW,carrot,ssp245,Heat,-0.03296
-FI_SW,carrot,ssp245,Irrigation,-0.0023
-FI_SW,carrot,ssp245,May temperature,0.006
-FI_SW,carrot,ssp245,Rain after sowing,0.00117
-FI_SW,carrot,ssp245,Rain before harvest,-0.00113
-FI_SW,carrot,ssp245,Season rain and evaporation,0.00212
-FI_SW,carrot,ssp245,Season timing,0.01628
-FI_SW,carrot,ssp245,"Warm, wet days",0.00457
-FI_SW,carrot,ssp585,Drought stress,0.00586
-FI_SW,carrot,ssp585,Heat,-0.05104
-FI_SW,carrot,ssp585,Irrigation,-0.00205
-FI_SW,carrot,ssp585,May temperature,0.00856
-FI_SW,carrot,ssp585,Rain after sowing,0.00315
-FI_SW,carrot,ssp585,Rain before harvest,-0.00125
-FI_SW,carrot,ssp585,Season rain and evaporation,0.00473
-FI_SW,carrot,ssp585,Season timing,0.01641
-FI_SW,carrot,ssp585,"Warm, wet days",0.00533
+FI_SW,potato,ssp245,Season rain and evaporation,0.01872
+FI_SW,potato,ssp245,Season timing,0.06723
+FI_SW,potato,ssp245,"Warm, wet days",-0.00815
+FI_SW,potato,ssp585,Drought stress,-0.01083
+FI_SW,potato,ssp585,Heat,-0.08737
+FI_SW,potato,ssp585,Irrigation,0.00285
+FI_SW,potato,ssp585,May temperature,-0.03507
+FI_SW,potato,ssp585,Rain after sowing,0.00355
+FI_SW,potato,ssp585,Rain before harvest,0.00399
+FI_SW,potato,ssp585,Season rain and evaporation,0.03385
+FI_SW,potato,ssp585,Season timing,0.09129
+FI_SW,potato,ssp585,"Warm, wet days",-0.00976
+FI_SW,carrot,ssp126,Drought stress,-0.0045
+FI_SW,carrot,ssp126,Heat,-0.01729
+FI_SW,carrot,ssp126,Irrigation,-0.00269
+FI_SW,carrot,ssp126,May temperature,0.00379
+FI_SW,carrot,ssp126,Rain after sowing,-1e-05
+FI_SW,carrot,ssp126,Rain before harvest,-0.00063
+FI_SW,carrot,ssp126,Season rain and evaporation,0.00242
+FI_SW,carrot,ssp126,Season timing,0.01841
+FI_SW,carrot,ssp126,"Warm, wet days",0.00325
+FI_SW,carrot,ssp245,Drought stress,0.00356
+FI_SW,carrot,ssp245,Heat,-0.0325
+FI_SW,carrot,ssp245,Irrigation,-0.00234
+FI_SW,carrot,ssp245,May temperature,0.00578
+FI_SW,carrot,ssp245,Rain after sowing,0.00109
+FI_SW,carrot,ssp245,Rain before harvest,-0.00136
+FI_SW,carrot,ssp245,Season rain and evaporation,0.00167
+FI_SW,carrot,ssp245,Season timing,0.01753
+FI_SW,carrot,ssp245,"Warm, wet days",0.00432
+FI_SW,carrot,ssp585,Drought stress,0.00595
+FI_SW,carrot,ssp585,Heat,-0.05047
+FI_SW,carrot,ssp585,Irrigation,-0.00209
+FI_SW,carrot,ssp585,May temperature,0.00824
+FI_SW,carrot,ssp585,Rain after sowing,0.00281
+FI_SW,carrot,ssp585,Rain before harvest,-0.00151
+FI_SW,carrot,ssp585,Season rain and evaporation,0.00391
+FI_SW,carrot,ssp585,Season timing,0.01776
+FI_SW,carrot,ssp585,"Warm, wet days",0.00504
 FI_SW,spinach,ssp126,Drought stress,0.0022
 FI_SW,spinach,ssp126,Heat,-0.00434
 FI_SW,spinach,ssp126,Irrigation,0.00076
@@ -131,27 +131,27 @@ FI_SW,spinach,ssp585,Rain before harvest,-0.00046
 FI_SW,spinach,ssp585,Season rain and evaporation,-0.0119
 FI_SW,spinach,ssp585,Season timing,-0.00764
 FI_SW,spinach,ssp585,"Warm, wet days",-0.00669
-FI_SW,turnip_rape,ssp126,Drought stress,0.00641
-FI_SW,turnip_rape,ssp126,Heat,-0.01464
-FI_SW,turnip_rape,ssp126,May temperature,-0.02701
-FI_SW,turnip_rape,ssp126,Rain after sowing,-0.00023
-FI_SW,turnip_rape,ssp126,Rain before harvest,0.00025
-FI_SW,turnip_rape,ssp126,Season rain and evaporation,0.00455
-FI_SW,turnip_rape,ssp126,Season timing,0.02258
-FI_SW,turnip_rape,ssp126,"Warm, wet days",-0.00246
-FI_SW,turnip_rape,ssp245,Drought stress,0.00414
-FI_SW,turnip_rape,ssp245,Heat,-0.03795
-FI_SW,turnip_rape,ssp245,May temperature,-0.04069
-FI_SW,turnip_rape,ssp245,Rain after sowing,-0.0006
-FI_SW,turnip_rape,ssp245,Rain before harvest,0.00304
-FI_SW,turnip_rape,ssp245,Season rain and evaporation,0.01
-FI_SW,turnip_rape,ssp245,Season timing,0.03532
-FI_SW,turnip_rape,ssp245,"Warm, wet days",-0.00318
-FI_SW,turnip_rape,ssp585,Drought stress,0.00976
-FI_SW,turnip_rape,ssp585,Heat,-0.06025
-FI_SW,turnip_rape,ssp585,May temperature,-0.05765
-FI_SW,turnip_rape,ssp585,Rain after sowing,-0.00149
-FI_SW,turnip_rape,ssp585,Rain before harvest,0.001
-FI_SW,turnip_rape,ssp585,Season rain and evaporation,0.01383
-FI_SW,turnip_rape,ssp585,Season timing,0.04775
-FI_SW,turnip_rape,ssp585,"Warm, wet days",-0.00366
+FI_SW,turnip_rape,ssp126,Drought stress,0.00607
+FI_SW,turnip_rape,ssp126,Heat,-0.01497
+FI_SW,turnip_rape,ssp126,May temperature,-0.02668
+FI_SW,turnip_rape,ssp126,Rain after sowing,-0.00019
+FI_SW,turnip_rape,ssp126,Rain before harvest,0.00027
+FI_SW,turnip_rape,ssp126,Season rain and evaporation,0.00459
+FI_SW,turnip_rape,ssp126,Season timing,0.02198
+FI_SW,turnip_rape,ssp126,"Warm, wet days",-0.00251
+FI_SW,turnip_rape,ssp245,Drought stress,0.00379
+FI_SW,turnip_rape,ssp245,Heat,-0.03849
+FI_SW,turnip_rape,ssp245,May temperature,-0.0402
+FI_SW,turnip_rape,ssp245,Rain after sowing,-0.00048
+FI_SW,turnip_rape,ssp245,Rain before harvest,0.00307
+FI_SW,turnip_rape,ssp245,Season rain and evaporation,0.01007
+FI_SW,turnip_rape,ssp245,Season timing,0.03438
+FI_SW,turnip_rape,ssp245,"Warm, wet days",-0.00325
+FI_SW,turnip_rape,ssp585,Drought stress,0.00943
+FI_SW,turnip_rape,ssp585,Heat,-0.06103
+FI_SW,turnip_rape,ssp585,May temperature,-0.05697
+FI_SW,turnip_rape,ssp585,Rain after sowing,-0.00131
+FI_SW,turnip_rape,ssp585,Rain before harvest,0.00101
+FI_SW,turnip_rape,ssp585,Season rain and evaporation,0.01394
+FI_SW,turnip_rape,ssp585,Season timing,0.04648
+FI_SW,turnip_rape,ssp585,"Warm, wet days",-0.00374
