@@ -1,5 +1,5 @@
 ,score,mape,nrmse
 farm_mean_loyo,38.1,0.1099,0.1572
 farm_mean_forward_2022_2026,42.5,0.0997,0.1543
-final_loyo,64.7,0.0555,0.1143
-final_forward_2022_2026,65.7,0.0536,0.1123
+final_loyo,71.1,0.0417,0.1067
+final_forward_2022_2026,71.9,0.04,0.1062

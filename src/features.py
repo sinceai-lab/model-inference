@@ -3,6 +3,8 @@
 weather_set: 'raw' is the supplied weather. 'delta' shifts 1991-2020 by the package's 2041-2060 monthly
 signals, which gives 30 extra future-climate years because only one realisation per SSP is supplied.
 """
+import hashlib
+
 import numpy as np
 import pandas as pd
 
@@ -58,7 +60,8 @@ def _rows(w, cell, set_name, scenario, crops):
 
 
 def build(force=False):
-    path = CACHE / "weather_features.parquet"
+    # The name carries the crop and soil settings, so changing them can't reuse stale features.
+    path = CACHE / f"weather_features_{hashlib.md5(repr((CROP, AWC_MM)).encode()).hexdigest()[:8]}.parquet"
     if path.exists() and not force:
         return pd.read_parquet(path)
     CACHE.mkdir(exist_ok=True)
