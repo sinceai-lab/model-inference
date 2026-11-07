@@ -23,7 +23,7 @@ CLASSES = ["#8f1d1d", "#d9423f", "#f09a90", "#e8e7e0", "#86b6ef", "#2a78d6", "#1
 LAND, SEA, GRID, RING, INK = [252, 252, 251], [226, 230, 230], [150, 149, 140, 110], [82, 81, 78], [11, 11, 11]
 HEIGHT, WIDTH = 620, 820
 ALL = ""
-NO_BASEMAP = 'data:application/json,{"version":8,"sources":{},"layers":[]}'  # Without a style Streamlit fetches a Carto basemap, which needs internet and adds real towns and roads.
+NO_BASEMAP = 'data:application/json,{"version":8,"sources":{},"layers":[]}'  # Used when there is no Carto key: the map then works offline with its own land and sea.
 GRID_BOX = {"FI_SW": ([60.6, 61.6], [21.2, 23.8]), "SE_SKANE": ([55.3, 56.9], [12.5, 14.6])}  # Lat and lon range shown for a whole region: the weather grid and its coast.
 LIVE = "map_live_"  # Selection widgets. They refuse writes, so keep_selections in app.py skips this prefix.
 
@@ -85,13 +85,29 @@ def _fit(lats, lons, zoom_cap=14.0):
     tall = max(lat1 - lat0, 0.003) * 1.1 / math.cos(math.radians(y))
     return pdk.ViewState(latitude=y, longitude=(lon0 + lon1) / 2, zoom=min(zoom_cap, math.log2(min(WIDTH * 360 / (512 * wide), HEIGHT * 360 / (512 * tall)))), pitch=0, bearing=0)
 
+def _carto_key():
+    """Carto API key from .streamlit/secrets.toml (kept out of git). Without one the map draws its own offline land and sea."""
+    try:
+        return st.secrets.get("carto_api_key")
+    except Exception:
+        return None
+
+
+def _basemap():
+    key = _carto_key()
+    if key:
+        return {"map_provider": "carto", "map_style": "light", "api_keys": {"carto": key}}
+    return {"map_style": NO_BASEMAP, "map_provider": None}
+
 
 def _background(region):
     x0, y0, x1, y1 = 0, 40, 40, 75
     land = {"type": "FeatureCollection", "features": [f for f in _land()["features"] if f["properties"]["region"] == region]}
+    grid = pdk.Layer("PolygonLayer", id="grid", data=_grid(region), get_polygon="polygon", filled=False, stroked=True, get_line_color=GRID, line_width_units="'pixels'", get_line_width=1, pickable=False)
+    if _carto_key():
+        return [grid]  # The Carto basemap supplies land and sea.
     return [pdk.Layer("PolygonLayer", id="sea", data=[{"polygon": [[x0, y0], [x1, y0], [x1, y1], [x0, y1]]}], get_polygon="polygon", get_fill_color=SEA, stroked=False, pickable=False),
-            pdk.Layer("GeoJsonLayer", id="land", data=land, get_fill_color=LAND, stroked=False, filled=True, pickable=False),
-            pdk.Layer("PolygonLayer", id="grid", data=_grid(region), get_polygon="polygon", filled=False, stroked=True, get_line_color=GRID, line_width_units="'pixels'", get_line_width=1, pickable=False)]
+            pdk.Layer("GeoJsonLayer", id="land", data=land, get_fill_color=LAND, stroked=False, filled=True, pickable=False), grid]
 
 
 def _labels(rows, layer_id, size):
@@ -319,7 +335,7 @@ def render(predictor, results, fields_of, filled):
             view, key = _fit(*GRID_BOX[region]), f"{LIVE}deck_region"
             _legend(farms["change_" + story], t("farms"))
             size_note = t("Dot size: the farm's field area. Labelled: the 8 farms at the top of the table below. Thin squares: the weather grid, about 15 × 28 km. We have no finer weather.")
-        st.pydeck_chart(pdk.Deck(layers=layers, initial_view_state=view, map_style=NO_BASEMAP, map_provider=None, tooltip={"html": "{tip}", "style": {"backgroundColor": "#fcfcfb", "color": "#0b0b0b", "fontSize": "13px", "border": "1px solid #c3c2b7"}}),
+        st.pydeck_chart(pdk.Deck(layers=layers, initial_view_state=view, **_basemap(), tooltip={"html": "{tip}", "style": {"backgroundColor": "#fcfcfb", "color": "#0b0b0b", "fontSize": "13px", "border": "1px solid #c3c2b7"}}),
                         height=HEIGHT, use_container_width=True, key=key, on_select=lambda: _pick(key), selection_mode="single-object")
         st.caption(size_note)
         st.markdown(t("**What the colour means:** the model's estimated yield change, from the crop, the climate story and the field's soil.") + " " + t("**What it doesn't mean:** that a place is safer or riskier. In this data, neighbouring farms are no more alike than random ones, and differences between weather-grid squares are mostly noise from a single simulated weather run, so the colour leaves them out. The soil map is only about 88% accurate, soil water capacities are our assumption, and irrigation is not part of the colour."))

@@ -1,7 +1,7 @@
 """Viewer translations. English text is the key, so a string missing from FI simply shows in English."""
 import streamlit as st
 
-LANGUAGES = {"en": "English", "fi": "Suomi"}
+LANGUAGES = {"fi": "Suomi", "en": "English"}
 
 FI = {
     # Page and tabs
@@ -381,7 +381,7 @@ CHART_LOCALE = {"en": {"decimal": ".", "thousands": ",", "grouping": [3], "curre
 
 
 def lang():
-    return st.session_state.get("lang", "en")
+    return st.session_state.get("lang", "fi")
 
 
 def t(text, **values):
