@@ -24,6 +24,8 @@ streamlit run app.py
 
 It compares the baseline with our model on held-out seasons, runs the trained model live for any field and season, and shows the future risk results. Trained models are saved in `cache/models.pkl`, and `src/inference.py` loads them.
 
+The selector at the top right switches between English (default) and Finnish. Translations are in `i18n.py`, with the English text as the key: wrap new text in `t("...")` and add its Finnish line there, or it shows in English. The Finnish was not written by a native speaker, so have one check it before showing it to others.
+
 The code expects the package in the sibling folder `APETIT_CLIMATE_NATURE_NAVIGATOR_2026`. Set `APETIT_PACKAGE` to use another path. A full clean rerun gave byte-identical C1 and C2 files.
 
 ## What is in this repository
