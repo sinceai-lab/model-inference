@@ -14,6 +14,7 @@ from backtest import metrics  # noqa: E402
 from config import OUT  # noqa: E402
 from i18n import CHART_LOCALE, LANGUAGES, eur, lang, num, t  # noqa: E402
 from inference import Predictor  # noqa: E402
+from map_tab import LIVE, render as render_map  # noqa: E402
 
 BLUE, ORANGE, RED, GRAY = "#2a78d6", "#eb6834", "#e34948", "#52514e"
 INK, MUTED, GRID, AXIS = "#0b0b0b", "#898781", "#e1e0d9", "#c3c2b7"
@@ -91,7 +92,8 @@ def filled(rule):
 def keep_selections():
     """Changing language relabels every widget, which would otherwise reset it to its default."""
     for key in list(st.session_state.keys()):
-        st.session_state[key] = st.session_state[key]
+        if not key.startswith(LIVE):
+            st.session_state[key] = st.session_state[key]
 
 
 def label(region, crop):
@@ -143,7 +145,7 @@ _, language = st.columns([5, 1])
 language.selectbox("Language / Kieli", list(LANGUAGES), format_func=LANGUAGES.get, key="lang", on_change=keep_selections)
 
 held_out = load("backtest_predictions.csv")
-tab_advice, tab_farm, tab_future, tab_try, tab_trust = st.tabs([t("Risk and advice"), t("Farm and fields"), t("All crops"), t("Try the model"), t("Can we trust this?")])
+tab_advice, tab_farm, tab_map, tab_future, tab_try, tab_trust = st.tabs([t("Risk and advice"), t("Farm and fields"), t("Map"), t("All crops"), t("Try the model"), t("Can we trust this?")])
 tab_compare = tab_season = tab_trust
 results = outputs()
 
@@ -223,6 +225,9 @@ with tab_farm:
          .rename(columns={"parcel_id": "Field", "area_ha": "Area (ha)", "soil": "Soil", "drainage": "Drainage", "yield_today": "Yield today (t/ha)", "change_below_2c": "Change, below 2 °C", "change_current_policies": "Change, hothouse", "stress_today": "Drought stress today (0–1)", "last_grown": "Last grown", "next_planned": "Next planned"}),
          {"Area (ha)": ".1f", "Yield today (t/ha)": ".2f", "Change, below 2 °C": "+.1%", "Change, hothouse": "+.1%", "Drought stress today (0–1)": ".2f"})
     st.caption(t("Yields use 2025 technology and the farm's usual irrigation, averaged over 1991–2020 weather. Changes compare 2041–2060 with that average."))
+
+with tab_map:
+    render_map(predictor(), results, fields_of, filled)
 
 # ---------------------------------------------------------------- 1
 with tab_compare:
