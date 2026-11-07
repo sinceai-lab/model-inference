@@ -14,6 +14,7 @@ from backtest import metrics  # noqa: E402
 from config import OUT  # noqa: E402
 from i18n import CHART_LOCALE, LANGUAGES, eur, lang, num, t  # noqa: E402
 from inference import Predictor  # noqa: E402
+from live_tab import render as render_live_tab  # noqa: E402
 
 BLUE, ORANGE, RED, GRAY = "#2a78d6", "#eb6834", "#e34948", "#52514e"
 INK, MUTED, GRID, AXIS = "#0b0b0b", "#898781", "#e1e0d9", "#c3c2b7"
@@ -143,7 +144,7 @@ _, language = st.columns([5, 1])
 language.selectbox("Language / Kieli", list(LANGUAGES), format_func=LANGUAGES.get, key="lang", on_change=keep_selections)
 
 held_out = load("backtest_predictions.csv")
-tab_advice, tab_farm, tab_future, tab_try, tab_trust = st.tabs([t("Risk and advice"), t("Farm and fields"), t("All crops"), t("Try the model"), t("Can we trust this?")])
+tab_advice, tab_farm, tab_future, tab_try, tab_trust, tab_live = st.tabs([t("Risk and advice"), t("Farm and fields"), t("All crops"), t("Try the model"), t("Can we trust this?"), t("Live season")])
 tab_compare = tab_season = tab_trust
 results = outputs()
 
@@ -402,3 +403,7 @@ with tab_future:
              .rename(columns={"region": "Region", "crop": "Crop", "ssp": "Scenario", "area_ha": "Area (ha)", "price_eur_t": "Contract price (€/t)", "premium": "Replacement premium", "baseline_t": "Baseline production (t)", "mean_shortfall_t": "Average shortfall (t)",
                               "expected_cost_eur_yr": "Expected cost (€/year)", "bad_year_p90_cost_eur": "Bad-year cost, 90th percentile (€)", "added_vs_todays_climate_eur_yr": "Added against today's climate (€/year)"}),
              {"Area (ha)": ",.0f", "Contract price (€/t)": ",.0f", "Replacement premium": ".0%", "Baseline production (t)": ",.0f", "Average shortfall (t)": ",.0f", "Expected cost (€/year)": eur, "Bad-year cost, 90th percentile (€)": eur, "Added against today's climate (€/year)": eur})
+
+# ---------------------------------------------------------------- 5
+with tab_live:
+    render_live_tab(draw, style, CROP)
