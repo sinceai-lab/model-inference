@@ -31,12 +31,60 @@ It is built for Apetit's farming team and advisors, following the Q&A session (b
 | **All crops** | The 2027–2031 forecast, every crop's yield change and the replacement cost |
 | **Try the model** | Runs the trained model live for any field and season, and shows why it landed on that number |
 | **Can we trust this?** | The baseline against our model on held-out seasons |
+| **Live season** | The running season's estimate as weather arrives, read from the live backend |
 
 Trained models are saved in `cache/models.pkl`, and `src/inference.py` loads them. The advice rules and field table are in `src/advisor.py`, which doesn't depend on Streamlit, so other front ends can call the same functions.
 
 The selector at the top right switches between English (default) and Finnish. Translations are in `i18n.py`, with the English text as the key: wrap new text in `t("...")` and add its Finnish line there, or it shows in English. The Finnish was not written by a native speaker, so have one check it before showing it to others.
 
 The code expects the package in the sibling folder `APETIT_CLIMATE_NATURE_NAVIGATOR_2026`. Set `APETIT_PACKAGE` to use another path. A full clean rerun gave byte-identical C1 and C2 files.
+
+## Live season backend
+
+Receives daily weather as FIWARE NGSI-LD notifications and turns it into in-season yield estimates. A mock broker stands in for the real one, which is being built separately. `docs/CB_INTEGRATION.md` and `docs/cb_handoff/` are for the broker owner.
+
+```bash
+pip install -r requirements.txt -r requirements-service.txt
+python -m service.cli start --writeback --viewer                      # backend 8600, mock broker 8601, viewer 8503
+python -m service.cli replay --cell GF0203 --year 2025 --speed 20 --wait   # in a second terminal
+python -m service.cli predictions --cell GF0203 --year 2025 --crop pea
+python -m pytest tests                                                # 8600 and 8601 must be free for the end-to-end test
+python -m service.replay_eval                                         # rewrites outputs/live_season_replay.csv
+```
+
+`python -m service.cli --help` lists the mock's controls: replay with a date range, speed and faults, `pause`, `resume`, `stop`, `send` for one reading by hand, and `inject` for duplicates, out-of-order, missing-day and malformed payloads. `reset-season` clears a season so it can be replayed.
+
+| Endpoint | Purpose |
+|---|---|
+| `POST /notify` | NGSI-LD notification: stores readings and recomputes estimates |
+| `POST /predict` | One raw feature row. Missing fields get a 422, and values outside the training range are flagged |
+| `POST /predict/field` | An existing parcel, crop, scenario and year |
+| `GET /predictions` | Estimates, filtered by cell, parcel, farm, crop or year, with `latest=true` for current ones |
+| `GET /observations/status` | Observed and filled days per season, and recent rejects |
+| `DELETE /observations` | Clears one season, for replaying it |
+| `GET /health` | Status, model version and write-back state |
+
+The logic is in `service/pipeline.py`, `engine.py`, `season.py`, `ngsi.py` and `store.py`, which don't use the web framework, so an MCP server can call them. `cache/models.pkl` is reloaded when it changes, and each estimate records the model's hash. Settings are environment variables: `CB_URL` (write-back, off by default), `CB_TENANT`, `CB_TOKEN`, `CB_CONTEXT`, `LIVE_DB`, `LIVE_FILL_COUNTS`, `LIVE_GAP_INTERP_DAYS` and, for the viewer, `LIVE_BACKEND_URL`.
+
+### How good is the estimate during the season?
+
+Past seasons replayed with later days hidden, on models that didn't train on the tested season, with later days filled as in live use. Regional production error, leave one season out (`outputs/live_season_replay.csv`, which also has the forward test and each crop):
+
+| Weather known until | Farm average | Estimate | Estimate with plain threshold counts | Crop seasons where the estimate beats the farm average |
+|---|---:|---:|---:|---:|
+| None (typical weather only) | 11.0 % | 10.6 % | 14.0 % | 62 % |
+| 15 May | 11.0 % | 10.9 % | 13.2 % | 48 % |
+| 1 June | 11.0 % | 10.9 % | 12.6 % | 50 % |
+| 15 June | 11.0 % | 9.8 % | 11.7 % | 64 % |
+| 1 July | 11.0 % | 7.7 % | 10.5 % | 68 % |
+| 15 July | 11.0 % | 6.1 % | 8.2 % | 70 % |
+| 1 August | 11.0 % | 5.5 % | 6.6 % | 70 % |
+| Whole season | 11.0 % | 5.6 % | 5.6 % | 71 % |
+
+* **Up to 1 June the estimate is no better than the farm average.** The gain starts in mid-June and is mostly complete by mid-July. Finnish pea is worse than the farm average until mid-June (17.8 % against 16.5 % on 1 June).
+* **The small early edge isn't from weather.** It's there with no weather at all, so it must come from the model's other terms, such as the technology trend and soil.
+* **Plain day-of-year averages alone would be worse than the farm average through mid-June,** which is why the threshold counts are handled separately (see `service/season.py`).
+* **These are mildly optimistic.** Model settings were tuned on the same seasons and farm-level rows stand in for fields. A past season replayed in the viewer uses the final model, which trained on it, so read the accuracy shown there rather than the replay itself.
 
 ## What is in this repository
 
@@ -58,6 +106,7 @@ Code, submission files, result tables and research notes (`docs/CLAUDE_insights_
 | `model_coefficients.csv` | Weather, soil and trend effects per crop (standardised) |
 | `backtest_summary.csv`, `backtest_per_crop_grid.csv` | Model performance |
 | `climate_extremes_check.csv` | Rainfall variability, history against scenarios |
+| `live_season_replay.csv` | In-season estimate against the farm average, by date, test and crop |
 
 ## Method
 
