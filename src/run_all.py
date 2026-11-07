@@ -5,6 +5,7 @@ import sys
 import numpy as np
 import pandas as pd
 
+from advisor import driver_changes, season_shift, weather_sets
 from backtest import evaluate, metrics, prep
 from config import CACHE, CROPS, DATA, MODEL_PARAMS, OUT, PACKAGE, SOILS, TASKS
 from dataset import parcels_with_cells, training
@@ -66,9 +67,6 @@ def main():
 
     pd.DataFrame({c: m.coefficients() for c, m in models.items()}).round(4).to_csv(OUT / "model_coefficients.csv")
 
-    with open(CACHE / "models.pkl", "wb") as fh:
-        pickle.dump(dict(models=models, farm_irr=farm_irr, farm_mean=final_data.groupby(["farm_id", "crop"]).yield_t_ha.mean()), fh)
-
     # ---------- C1
     tpl = pd.read_csv(TASKS / "templates/C1_yields_2027_2031_submission.csv")
     raw = f[f.weather_set == "raw"].drop(columns=["weather_set"])
@@ -100,11 +98,7 @@ def main():
     mix = ch[(ch.year == 2025) & ch.crop.isin(CROPS)].merge(parcels[["parcel_id", "area_ha", "cell_id", "soil_class_soilmap", "clay", "region"]], on="parcel_id")
     mix = add_parcel_columns(mix.drop(columns="year"))
     mix["irr"] = [farm_irr.get((a, b), 0.0) for a, b in zip(mix.farm_id, mix.crop)]
-    sets = pd.concat([
-        f[(f.weather_set == "raw") & (f.scenario == "historical") & f.year.between(1991, 2020)].assign(run="baseline", ssp="baseline"),
-        f[(f.weather_set == "raw") & f.scenario.isin(["ssp126", "ssp245", "ssp585"]) & f.year.between(2041, 2060)].assign(run="raw", ssp=lambda d: d.scenario),
-        f[f.weather_set == "delta"].assign(run="delta", ssp=lambda d: d.scenario),
-    ]).rename(columns={"soil": "soil_class_soilmap"})
+    sets = weather_sets(f)
 
     def annual(model_by_crop, irr_override=None):
         out = []
@@ -133,6 +127,22 @@ def main():
 
     # Long-range work shares one weather response across regions: 9 Swedish seasons cannot support Sweden-only effects.
     long_models = {c: make(c, se_interactions=False).fit(final_data[final_data.crop == c]) for c in CROPS}
+    with open(CACHE / "models.pkl", "wb") as fh:
+        pickle.dump(dict(models=models, long_models=long_models, farm_irr=farm_irr, farm_mean=final_data.groupby(["farm_id", "crop"]).yield_t_ha.mean()), fh)
+    driver_changes(long_models, mix, sets).to_csv(OUT / "advisor_drivers.csv", index=False)
+    season_shift(mix, sets).to_csv(OUT / "advisor_season_shift.csv", index=False)
+
+    # The long-range pea model drops the Sweden-specific weather terms, so test that version on held-out seasons too.
+    pea = t[t.crop == "pea"].reset_index(drop=True)
+    pea_rows = []
+    for test, tested_years, is_forward in [("loyo", years, False), ("forward", [y for y in years if y >= 2022], True)]:
+        runs = {"baseline": evaluate(pea, tested_years, lambda _: None, forward=is_forward), "regional_weather_response": evaluate(pea, tested_years, lambda _: make("pea"), forward=is_forward),
+                "shared_weather_response": evaluate(pea, tested_years, lambda _: make("pea", se_interactions=False), forward=is_forward)}
+        for method, p in runs.items():
+            for region, g in p.groupby("region"):
+                m = metrics(g)
+                pea_rows.append(dict(test=test, region=region, method=method, production_error=m["mape"], yield_error=m["nrmse"]))
+    pd.DataFrame(pea_rows).to_csv(OUT / "backtest_pea_models.csv", index=False)
     a = annual(long_models)
     risk = risk_table(a, sigma)
     sens = risk_table(annual({"pea": models["pea"]}), sigma)[["region", "crop", "scenario", "mean_yield_change_pct"]].rename(columns={"mean_yield_change_pct": "change_with_se_specific_response"})
@@ -230,18 +240,6 @@ def main():
     ext = pd.DataFrame(ext).round(2)
     ext.to_csv(OUT / "climate_extremes_check.csv", index=False)
     print(ext.to_string())
-
-    # Two-region hedge for peas, observed seasons.
-    pea = t[t.crop == "pea"].assign(prod=lambda d: d.yield_t_ha * d.area_ha).groupby(["year", "region"]).agg(prod=("prod", "sum"), area=("area_ha", "sum"))
-    y = (pea["prod"] / pea.area).unstack().dropna()
-    w = pea.area.unstack().loc[y.index].mean()
-    w = w / w.sum()
-    both = y["FI_SW"] * w["FI_SW"] + y["SE_SKANE"] * w["SE_SKANE"]
-    hedge = dict(seasons=len(y), correlation=y["FI_SW"].corr(y["SE_SKANE"]), cv_fi=y["FI_SW"].std() / y["FI_SW"].mean(), cv_se=y["SE_SKANE"].std() / y["SE_SKANE"].mean(), cv_combined=both.std() / both.mean(),
-                 worst_vs_mean_fi=y["FI_SW"].min() / y["FI_SW"].mean(), worst_vs_mean_se=y["SE_SKANE"].min() / y["SE_SKANE"].mean(), worst_vs_mean_combined=both.min() / both.mean())
-    pd.Series(hedge).round(3).to_csv(OUT / "C3_pea_hedge.csv", header=["value"])
-    print(y.round(2).T.to_string())
-    print(pd.Series(hedge).round(3).to_string())
 
 
 def _phi(x):

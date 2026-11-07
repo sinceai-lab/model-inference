@@ -4,7 +4,8 @@ import pickle
 import numpy as np
 import pandas as pd
 
-from config import CACHE, OUT, SOILS
+from advisor import weather_sets
+from config import CACHE, DATA, OUT, SOILS
 from dataset import parcels_with_cells
 from features import build
 
@@ -13,9 +14,11 @@ class Predictor:
     def __init__(self):
         with open(CACHE / "models.pkl", "rb") as fh:
             saved = pickle.load(fh)
-        self.models, self.farm_irr, self.farm_mean = saved["models"], saved["farm_irr"], saved["farm_mean"]
+        self.models, self.long_models, self.farm_irr, self.farm_mean = saved["models"], saved["long_models"], saved["farm_irr"], saved["farm_mean"]
         self.parcels = parcels_with_cells().set_index("parcel_id")
         f = build()
+        self.sets = weather_sets(f)
+        self.history = pd.read_csv(DATA / "03_farming/parcel_crop_history_and_plan.csv")
         self.weather = f[f.weather_set == "raw"].drop(columns="weather_set").rename(columns={"soil": "soil_class_soilmap"})
 
     def predict(self, parcel_id, crop, scenario, year, irrigation=None):
@@ -34,7 +37,8 @@ class Predictor:
         technology = None if year <= 2031 else 2025
         if technology is not None:
             d["year"] = technology
-        model = self.models[crop]
+        # Long-range seasons use the same shared weather response as the 2041-2060 risk tables.
+        model = self.models[crop] if technology is None else self.long_models[crop]
         base, effects = model.explain(d)
         return dict(pred=float(np.exp(model.predict_log(d))[0]), base=float(np.exp(base)), effects=effects, usual_irrigation=usual,
                     baseline=float(self.farm_mean.get((p.farm_id, crop), np.nan)), weather=d.iloc[0], parcel=p)

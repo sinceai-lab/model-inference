@@ -22,7 +22,17 @@ To open the viewer, run this from the project folder after `run_all.py`:
 streamlit run app.py
 ```
 
-It compares the baseline with our model on held-out seasons, runs the trained model live for any field and season, and shows the future risk results. Trained models are saved in `cache/models.pkl`, and `src/inference.py` loads them.
+It is built for Apetit's farming team and advisors, following the Q&A session (branch `inference-v2-QA-suggestions`):
+
+| Tab | Purpose |
+|---|---|
+| **Risk and advice** | Two futures for a crop, what drives the change, how the season shifts, policy costs and draft actions |
+| **Farm and fields** | One farm's fields compared by soil, modelled yield and crop plan |
+| **All crops** | The 2027–2031 forecast, every crop's yield change and the replacement cost |
+| **Try the model** | Runs the trained model live for any field and season, and shows why it landed on that number |
+| **Can we trust this?** | The baseline against our model on held-out seasons |
+
+Trained models are saved in `cache/models.pkl`, and `src/inference.py` loads them. The advice rules and field table are in `src/advisor.py`, which doesn't depend on Streamlit, so other front ends can call the same functions.
 
 The selector at the top right switches between English (default) and Finnish. Translations are in `i18n.py`, with the English text as the key: wrap new text in `t("...")` and add its Finnish line there, or it shows in English. The Finnish was not written by a native speaker, so have one check it before showing it to others.
 
@@ -42,7 +52,8 @@ Code, submission files, result tables and research notes (`docs/CLAUDE_insights_
 | `C2_bad_year_check.csv` | Bad-year method compared with observed history |
 | `C3_euro_risk.csv` | Replacement cost per region, crop and scenario |
 | `C3_irrigation_evidence.csv`, `C3_irrigation_se_within_farm.csv` | Irrigation effect and where it can be measured |
-| `C3_pea_hedge.csv` | Finland and Sweden as a two-region hedge for peas |
+| `advisor_drivers.csv`, `advisor_season_shift.csv` | What drives each yield change, and how the season shifts per scenario |
+| `backtest_pea_models.csv` | Separate and shared pea weather responses on held-out seasons |
 | `yield_corrections_log.csv` | Every yield correction or exclusion, with its rule |
 | `model_coefficients.csv` | Weather, soil and trend effects per crop (standardised) |
 | `backtest_summary.csv`, `backtest_per_crop_grid.csv` | Model performance |
@@ -105,19 +116,30 @@ Only Swedish peas can measure this, because 167 farms there switch between irrig
 * **By season:** 15 % in 2021, 13 % in 2023 and 10 % in 2026, against −0.1 % to 6 % in the other six seasons.
 * **Finland:** no farm switches, so the effect can't be separated from the farm. Irrigated farms' higher yields may have other causes.
 
-### Finland and Sweden as a pea hedge
+## What Apetit asked for (Q&A session)
 
-Over 9 shared seasons, the yield correlation is 0.55. Variability (coefficient of variation) is 14 % for Finland alone, 11 % for Sweden alone and 11 % combined. The worst combined year (83 % of average) is no better than Sweden's worst alone. **It's a modest hedge:** 2026 shows the two regions diverging, but 2021 and 2023 were poor in both.
+* They judge usefulness to their work, not the auto-scorer, which came from SinceAI and doesn't affect their decision.
+* The main users are the farming team, advisors and farmers. Management and sustainability staff come second.
+* Farmers want graphs and advice rather than data. Their stated gap is knowing what to do about a risk.
+* Their decisions include sowing and harvest timing, staggering pea sowing by up to a month, and variety trials.
+* They care most about a hothouse future and staying below 2 °C, including policy costs in the latter.
+* Finland and Sweden are separate operations and no peas move between them, so the earlier hedge analysis was dropped.
 
 ## Limits
 
+* **Advice rules are drafts.** They are written rules triggered by model results, and advisors should review them. Sowing dates and varieties aren't in the data, so neither can be recommended from it.
+* **Backtests use known weather.** Both tests give the model the actual weather of the season it predicts, so they don't measure forecasting with unknown weather.
+* **Driver effects aren't causes.** Weather measures are correlated, so the advice page only reads them as three grouped themes.
+* **Field differences.** Models train on farm averages, so differences between fields rest mainly on the soil map.
+* **Sowing estimate.** It uses temperature alone and is capped at 10 April. About half of historical pea years hit the cap, so the shift is a minimum.
+* **Policy prices.** The carbon, fertiliser and diesel paths are the package's illustrative values, not forecasts.
 * **Assumed parameters.** Soil water capacities, crop stage thresholds and maturity values are our assumptions, not package values.
 * **Limited history.** There are 15 Finnish and 9 Swedish seasons, with weather largely shared within a region. Small crops have few farms.
 * **Heat extrapolation.** Hot days in south-west Finland rise from 3.5 to 13.5 a year under SSP5-8.5. A mostly linear response fitted to cooler seasons may understate damage. How far this leaves the training range has only been checked for Swedish peas so far.
 * **Bad-year rates.** Modelled rates are above observed for peas and turnip rape (for example 14 % against 7 % for Finnish peas). They are based on few seasons.
 * **Swedish signal.** The climate signals file has no regional split, so the same signals are applied to both regions.
 * **Not modelled.** CO2 fertilisation and adaptation are not in the data. Water availability for irrigation is not assessed.
-* **Euro risk.** Uses 2025 prices and counts only the premium paid on replaced volume. It excludes replacement-import emissions, lost margin and price shocks.
+* **Euro risk.** Uses 2025 prices and counts only the premium paid on replaced volume. It excludes replacement-import emissions, lost margin, price shocks and what Apetit still pays farmers after a poor crop.
 * **Expert review.** No review workflow exists yet. The corrections log is ready to feed one.
 
 ## Microsoft path
