@@ -1,0 +1,53 @@
+{
+  "id": "urn:ngsi-ld:Notification:example-0001",
+  "type": "Notification",
+  "subscriptionId": "urn:ngsi-ld:Subscription:apetit-weather",
+  "notifiedAt": "2027-06-16T06:00:00Z",
+  "data": [
+    {
+      "id": "urn:ngsi-ld:WeatherObserved:GF0104",
+      "type": "WeatherObserved",
+      "dateObserved": {
+        "type": "Property",
+        "value": {
+          "@type": "DateTime",
+          "@value": "2027-06-15T00:00:00Z"
+        }
+      },
+      "cellId": {
+        "type": "Property",
+        "value": "GF0104"
+      },
+      "location": {
+        "type": "GeoProperty",
+        "value": {
+          "type": "Point",
+          "coordinates": [
+            22.625,
+            60.975
+          ]
+        }
+      },
+      "temperature": {
+        "type": "Property",
+        "value": 14.4,
+        "unitCode": "CEL"
+      },
+      "temperatureMax": {
+        "type": "Property",
+        "value": 21.3,
+        "unitCode": "CEL"
+      },
+      "precipitation": {
+        "type": "Property",
+        "value": 0.0,
+        "unitCode": "MMT"
+      },
+      "referenceEvapotranspiration": {
+        "type": "Property",
+        "value": 4.62,
+        "unitCode": "MMT"
+      }
+    }
+  ]
+}
