@@ -85,7 +85,7 @@ Past seasons replayed with later days hidden, on models that didn't train on the
 | 1 August | 11.0 % | 4.2 % | 6.1 % | 76 % |
 | Whole season | 11.0 % | 4.2 % | 4.2 % | 75 % |
 
-* **Up to 1 June the estimate is no better than the farm average.** The gain starts in mid-June and is mostly complete by mid-July. Finnish pea is worse than the farm average until mid-June (17.8 % against 16.5 % on 1 June).
+* **Up to 1 June the estimate is no better than the farm average.** The gain starts in mid-June and is mostly complete by mid-July. Finnish pea is worse than the farm average until mid-June (17.7 % against 16.5 % on 1 June).
 * **The small early edge isn't from weather.** It's there with no weather at all, so it must come from the model's other terms, such as the technology trend and soil.
 * **Plain day-of-year averages alone would be worse than the farm average through mid-June,** which is why the threshold counts are handled separately (see `service/season.py`).
 * **These are mildly optimistic.** Model settings were tuned on the same seasons and farm-level rows stand in for fields. A past season replayed in the viewer uses the final model, which trained on it, so read the accuracy shown there rather than the replay itself.

@@ -44,7 +44,7 @@ After changing version or reverting, rerun the pipeline, because `cache/` isn't 
 
 ## Setup
 
-Python 3.9. Clone the repo, and put the **whole** unzipped challenge package next to it. It isn't in this repo, because part of it isn't openly licensed, so never commit it.
+Developed on Python 3.9; other versions are untested. Clone the repo, and put the **whole** unzipped challenge package next to it. It isn't in this repo, because part of it isn't openly licensed, so never commit it.
 
 ```text
 parent-folder/
@@ -55,7 +55,7 @@ parent-folder/
 Set `APETIT_PACKAGE` to use another location.
 
 ```bash
-python3.9 -m venv .venv && source .venv/bin/activate
+python3 -m venv .venv && source .venv/bin/activate   # check first: python3 --version
 pip install -r requirements.txt -r requirements-service.txt
 cd src
 python features.py          # weather features; writes to cache/
