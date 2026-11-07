@@ -175,7 +175,11 @@ def main():
         y_o, y_p = y_o / y_o.mean(), y_p / y_p.mean()
         s = sigma[(reg, crop)]
         chk.append(dict(region=reg, crop=crop, seasons=len(g), observed_bad=float((y_o < BAD).mean()), modelled_bad=float(_phi((np.log(BAD) - np.log(y_p)) / s).mean()), season_error_sigma=round(s, 3)))
-    chk = pd.DataFrame(chk).round(3)
+    chk = pd.DataFrame(chk)
+    # Same method on today's climate, so a scenario's bad-year chance can be read as a change.
+    now = a[a.run == "baseline"].assign(r=lambda d: d.y / d.groupby(["region", "crop"]).y.transform("mean"))
+    now["p"] = _phi((np.log(BAD) - np.log(now.r)) / now.set_index(["region", "crop"]).index.map(sigma))
+    chk = chk.merge(now.groupby(["region", "crop"]).p.mean().rename("p_bad_today").reset_index(), on=["region", "crop"]).round(3)
     chk.to_csv(OUT / "C2_bad_year_check.csv", index=False)
     print(chk.to_string())
 

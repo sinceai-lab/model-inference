@@ -9,8 +9,8 @@ from models import YieldModel, groups
 def prep(t, mask=None):
     t = t.copy()
     tr = t if mask is None else t[mask]
-    fm = tr.groupby("farm_id").irrigated.mean()
-    t["irr_fm"] = t.farm_id.map(fm)
+    fm = tr.groupby(["farm_id", "crop"]).irrigated.mean().rename("irr_fm").reset_index()
+    t = t.merge(fm, on=["farm_id", "crop"], how="left")
     fallback = tr.groupby(["region", "crop"]).irrigated.mean().rename("irr_g").reset_index()
     t = t.merge(fallback, on=["region", "crop"], how="left")
     t["irr"] = t.irr_fm.fillna(t.irr_g).fillna(0.0)

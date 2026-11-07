@@ -90,10 +90,10 @@ Settings were chosen using the same seasons, so these figures are mildly optimis
 |---|---:|---:|---:|---:|---|
 | Finland, turnip rape | −1.3 % | −3.2 % | −5.4 % | −8.7 to −3.9 | Medium |
 | Finland, spinach | −0.8 % | −2.3 % | −3.7 % | −6.2 to −2.7 | Low to medium: few farms |
-| Finland, potato | +0.8 % | −1.1 % | −2.7 % | −4.8 to −0.1 | Low to medium: few farms |
-| Finland, carrot | +0.1 % | −0.3 % | −1.2 % | −4.0 to +1.0 | Low: few farms |
-| Finland, pea | +0.4 % | +0.2 % | +0.5 % | −1.6 to +3.0 | Low: sign changes with model choice |
-| Sweden, pea | +5.2 % | +5.0 % | +4.4 % | +2.0 to +7.0 | Low: 9 seasons |
+| Finland, potato | +1.4 % | −0.3 % | −1.6 % | −3.7 to +0.5 | Low to medium: few farms |
+| Finland, carrot | 0.0 % | −0.4 % | −1.3 % | −4.1 to +0.9 | Low: few farms |
+| Finland, pea | +0.4 % | +0.3 % | +0.5 % | −1.5 to +3.1 | Low: sign changes with model choice |
+| Sweden, pea | +5.3 % | +5.1 % | +4.4 % | +2.1 to +7.0 | Low: 9 seasons |
 
 Confidence labels are our judgment. Ranges only show sensitivity to dropping one training season, not total uncertainty.
 
@@ -101,10 +101,10 @@ Confidence labels are our judgment. Ranges only show sensitivity to dropping one
 
 | Region | Today's climate | SSP1-2.6 | SSP2-4.5 | SSP5-8.5 |
 |---|---:|---:|---:|---:|
-| Finland, € a year | 275,000 | 273,000 | 311,000 | 349,000 |
-| Sweden, € a year (low confidence) | 183,000 | 113,000 | 125,000 | 136,000 |
+| Finland, € a year | 275,000 | 271,000 | 307,000 | 344,000 |
+| Sweden, € a year (low confidence) | 183,000 | 112,000 | 125,000 | 135,000 |
 
-* Of the €74,000 a year Finland adds under SSP5-8.5, spinach accounts for €47,000 and potato for €18,000.
+* Of the €69,000 a year Finland adds under SSP5-8.5, spinach accounts for €47,000 and potato for €14,000.
 * Normal weather variation already costs more than climate change adds, even under the highest scenario.
 * Turnip rape shows the largest yield decline but a small cost, because its replacement premium is only 8 %.
 
@@ -131,11 +131,11 @@ Only Swedish peas can measure this, because 167 farms there switch between irrig
 * **Backtests use known weather.** Both tests give the model the actual weather of the season it predicts, so they don't measure forecasting with unknown weather.
 * **Driver effects aren't causes.** Weather measures are correlated, so the advice page only reads them as three grouped themes.
 * **Field differences.** Models train on farm averages, so differences between fields rest mainly on the soil map.
-* **Sowing estimate.** It uses temperature alone and is capped at 10 April. About half of historical pea years hit the cap, so the shift is a minimum.
+* **Sowing estimate.** It uses temperature alone and is capped at 10 April. Roughly a quarter of historical pea years hit the cap in Finland and over 70% in Sweden, so the shift is a minimum and isn't shown for Swedish peas.
 * **Policy prices.** The carbon, fertiliser and diesel paths are the package's illustrative values, not forecasts.
 * **Assumed parameters.** Soil water capacities, crop stage thresholds and maturity values are our assumptions, not package values.
 * **Limited history.** There are 15 Finnish and 9 Swedish seasons, with weather largely shared within a region. Small crops have few farms.
-* **Heat extrapolation.** Hot days in south-west Finland rise from 3.5 to 13.5 a year under SSP5-8.5. A mostly linear response fitted to cooler seasons may understate damage. How far this leaves the training range has only been checked for Swedish peas so far.
+* **Heat extrapolation.** Hot days in the potato and carrot seasons in south-west Finland rise from about 3.5 to 11–12 a year under SSP5-8.5. A mostly linear response fitted to cooler seasons may understate damage. How far this leaves the training range has only been checked for Swedish peas so far.
 * **Bad-year rates.** Modelled rates are above observed for peas and turnip rape (for example 14 % against 7 % for Finnish peas). They are based on few seasons.
 * **Swedish signal.** The climate signals file has no regional split, so the same signals are applied to both regions.
 * **Not modelled.** CO2 fertilisation and adaptation are not in the data. Water availability for irrigation is not assessed.

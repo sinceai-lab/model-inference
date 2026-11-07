@@ -150,7 +150,7 @@ results = outputs()
 # ---------------------------------------------------------------- Advice for the farming team
 with tab_advice:
     st.title(t("What does climate change mean for this crop?"))
-    st.markdown(t("For the farming team and advisors. It compares two futures for 2041–2060 against the climate of 1991–2020. **Below 2 °C** brings more policy costs, such as carbon and fuel. **Hothouse** brings more risk in the field. The data is synthetic, so these aren't findings about real farms."))
+    st.markdown(t("For the farming team and advisors. It compares two futures for 2041–2060 against the climate of 1991–2020. **Below 2 °C** brings more policy costs, such as carbon and fuel. **Hothouse** brings more physical risk in the field, though not for every crop. The data is synthetic, so these aren't findings about real farms."))
     advice_pairs = list(CONFIDENCE)
     a1, a2 = st.columns(2)
     region_a, crop_a = a1.selectbox(t("Region and crop"), advice_pairs, format_func=lambda x: label(*x), key="advice_pair")
@@ -163,9 +163,10 @@ with tab_advice:
             st.subheader(t(STORY[name]))
             m1, m2, m3 = st.columns(3)
             m1.metric(t("Yield change"), num(risk.mean_yield_change_pct / 100, "+.1%"))
-            m1.caption(t("Range {low} to {high}", low=num(risk.change_min / 100, "+.1%"), high=num(risk.change_max / 100, "+.1%")))
+            m1.caption(t("If one season is dropped: {low} to {high}", low=num(risk.change_min / 100, "+.1%"), high=num(risk.change_max / 100, "+.1%")))
             m2.metric(t("Bad-year chance"), num(risk.p_bad_year, ".0%"))
-            m2.caption(t("Yield under 80% of normal"))
+            seen = results["bad_check"].query("region == @region_a and crop == @crop_a").iloc[0]
+            m2.caption(t("Yield under 80% of normal. Today's climate: {today}. Seen so far: {seen} of {seasons} seasons", today=num(seen.p_bad_today, ".0%"), seen=round(seen.observed_bad * seen.seasons), seasons=int(seen.seasons)))
             m3.metric(t("Added import cost"), eur(added))
             m3.caption(t("A year, against today's climate"))
     st.subheader(t("Suggested actions"))
@@ -182,12 +183,12 @@ with tab_advice:
     st.caption(t("Weather measures rise and fall together, so single measures can't be separated reliably. That's why they're grouped into themes. The effects are the model's estimates, not proven causes."))
     st.subheader(t("How the season changes"))
     seasons = {name: season_summary(results, region_a, crop_a, ssp) for name, ssp in STORIES.items()}
-    shift_rows = pd.DataFrame([dict(category=t(c), story=t(STORY[name]), days=seasons[name][k]) for c, k in [("Reaches maturity", "maturity_days_earlier"), ("Warm enough to sow", "sowing_days_earlier")] for name in STORIES])
+    shift_rows = pd.DataFrame([dict(category=t(c), story=t(STORY[name]), days=seasons[name][k]) for c, k in ([("Reaches maturity", "maturity_days_earlier")] if region_a == "SE_SKANE" else [("Reaches maturity", "maturity_days_earlier"), ("Warm enough to sow", "sowing_days_earlier")]) for name in STORIES])
     draw(story_bars(shift_rows, "days", t("Days earlier than today"), ".0f", ".0f", 170), "season_shift")
     first = next(iter(seasons.values()))
     show(pd.DataFrame({"Measure": [t("Days at 27 °C or above"), t("Warm, wet days, July–August"), t("Drought stress, sensitive stage (0–1)")], "Today's climate": [round(first["hot_days_today"], 1), round(first["wet_days_today"], 1), round(first["stress_today"], 2)],
                        **{STORY[name]: [round(seasons[name]["hot_days"], 1), round(seasons[name]["wet_days"], 1), round(seasons[name]["stress"], 2)] for name in STORIES}}), {"Today's climate": "g", **{STORY[name]: "g" for name in STORIES}})
-    st.caption(t("Calculated from daily weather using our assumed crop thresholds, so read the change rather than the dates. Sowing is estimated from temperature alone and capped at 10 April, so its shift is a minimum, and real sowing also depends on the soil."))
+    st.caption(t("Calculated from daily weather using our assumed crop thresholds, so read the change rather than the dates. Sowing is estimated from temperature alone and capped at 10 April, so its shift is a minimum, and real sowing also depends on the soil. It isn't shown for Swedish peas, where most years hit that cap."))
     st.subheader(t("Policy costs"))
     paths = results["policy"]
     p1, p2, p3 = st.columns(3)
@@ -326,34 +327,32 @@ with tab_try:
     r = P.predict(parcel, crop, scenario, year, IRRIGATION[irrigation][1])
     a, b, c = st.columns(3)
     obs = held_out[(held_out.test == "loyo") & (held_out.farm_id == farm_t) & (held_out.crop == crop) & (held_out.year == year)] if scenario == "historical" else pd.DataFrame()
+    a.metric(t("Our model"), f"{num(r['pred'])} t/ha")
+    b.metric(t("Baseline: farm average"), f"{num(r['baseline'])} t/ha")
+    b.caption(t("The same for any weather"))
     if len(obs):
-        # A season with a reported yield: compare all three at farm level, with that season hidden from both methods.
-        a.metric(t("Our model"), f"{num(obs.pred_model.iloc[0])} t/ha")
-        a.caption(t("Whole farm, season hidden from training. Final model for this field: {pred} t/ha", pred=num(r["pred"])))
-        b.metric(t("Baseline: farm average"), f"{num(obs.pred_baseline.iloc[0])} t/ha")
-        b.caption(t("Whole farm, season hidden from the average"))
+        a.caption(t("This field, using the final model, which trained on this season"))
         c.metric(t("Actual for this farm"), f"{num(obs.yield_t_ha.iloc[0])} t/ha")
         c.caption(t("Whole farm"))
+        # The fair comparison: same farm-level basis, with this season hidden from both methods.
+        st.info(t("Fair check for the whole farm at its usual irrigation, with this season hidden from both methods: our model {model}, baseline {base}, actual {actual} t/ha.", model=num(obs.pred_model.iloc[0]), base=num(obs.pred_baseline.iloc[0]), actual=num(obs.yield_t_ha.iloc[0])))
     else:
-        a.metric(t("Our model"), f"{num(r['pred'])} t/ha")
         a.caption(t("{pct} against the baseline", pct=num(r["pred"] / r["baseline"] - 1, "+.1%")))
-        b.metric(t("Baseline: farm average"), f"{num(r['baseline'])} t/ha")
-        b.caption(t("The same for any weather"))
         c.metric(t("Actual for this farm"), t("Not available"))
         c.caption(t("Future season, or the farm didn't report"))
     notes = [t("Soil-map class: {soil}, {area} ha. The soil map is only about 88% accurate.", soil=t(r["parcel"].soil_class_soilmap.replace("_", " ")), area=num(r["parcel"].area_ha, ".1f")), t("This farm's usual irrigated share for this crop: {share}.", share=num(r["usual_irrigation"], ".0%"))]
     if year > 2031:
-        notes.append(t("Technology is held at 2025, so this shows the effect of weather only."))
+        notes.append(t("Technology is held at 2025, so differences between future seasons come from weather."))
     if year > 2031:
         notes.append(t("This uses the shared weather response, the same as the risk results for 2041–2060."))
     if irrigation != "usual":
-        notes.append(t("The modelled irrigation effect is an estimate. It averages about the measured +6% for Sweden, but misses individual seasons and can turn slightly negative in very wet seasons, which is an artifact."))
+        notes.append(t("The modelled irrigation effect is an estimate. In past seasons it averages about the measured +6% for Sweden, but it misses individual seasons and can turn negative, down to about -7%, mostly on organic and silt soils, which is an artifact."))
     st.markdown("\n".join("- " + n for n in notes))
     st.subheader(t("Why this number"))
     e = r["effects"]
     e = (np.exp(e) - 1).rename("effect").reset_index().rename(columns={"index": "driver"})
     e = e[e.effect.abs() >= 0.001].sort_values("effect").assign(driver=lambda x: x.driver.map(t))
-    st.caption(t("Each bar is that driver's percentage effect, starting from {base} t/ha for an average field and season. The effects multiply to give the model's result.", base=num(r["base"])))
+    st.caption(t("Each bar is that driver's percentage effect, starting from {base} t/ha for an average field and season. The effects multiply to give the model's result. Weather measures overlap, so single bars can partly cancel each other out.", base=num(r["base"])))
     bar = alt.Chart(e).mark_bar(size=18, cornerRadiusEnd=4).encode(
         y=alt.Y("driver:N", sort=e.driver.tolist()[::-1], title=None, axis=alt.Axis(labelColor=INK, labelLimit=220)), x=alt.X("effect:Q", title=t("Effect on yield"), axis=alt.Axis(format="+.0%"), scale=alt.Scale(domain=[min(0.0, float(e.effect.min()) * 1.25), max(0.0, float(e.effect.max()) * 1.25)])),
         color=alt.condition("datum.effect >= 0", alt.value(BLUE), alt.value(RED)), tooltip=[alt.Tooltip("driver:N", title=t("Driver")), alt.Tooltip("effect:Q", title=t("Effect"), format="+.1%")])
@@ -389,7 +388,7 @@ with tab_future:
     dot = alt.Chart(d).mark_circle(size=110, color=BLUE, opacity=1, stroke="#fcfcfb", strokeWidth=2).encode(y=enc_y, x="mean_yield_change_pct:Q", tooltip=[alt.Tooltip("name:N", title=t("Crop")), alt.Tooltip("mean_yield_change_pct:Q", format="+.1f", title=t("Change %")), alt.Tooltip("change_min:Q", format="+.1f", title=t("Low %")), alt.Tooltip("change_max:Q", format="+.1f", title=t("High %")), alt.Tooltip("p_bad_year:Q", format=".0%", title=t("Bad-year chance"))])
     zero = alt.Chart(pd.DataFrame({"x": [0]})).mark_rule(color=ORANGE, strokeWidth=2).encode(x="x:Q")
     draw(style(zero + span + dot, 280), "changes")
-    st.caption(t("Dot: our estimate. Line: the range when each training season is left out in turn, which is not total uncertainty. Orange: the baseline of no change. Swedish peas (9 seasons) and Finnish peas are low confidence."))
+    st.caption(t("Dot: our estimate. Line: the range when each training season is left out in turn, which is not total uncertainty. Orange: the baseline of no change. Swedish peas (9 seasons), Finnish peas and carrot are low confidence."))
     table = d[["name", "mean_yield_change_pct", "change_min", "change_max", "p_bad_year"]].assign(baseline_change=0.0, baseline_bad=0.10).rename(columns={"name": "Region and crop", "mean_yield_change_pct": "Our change %", "change_min": "Low %", "change_max": "High %", "p_bad_year": "Our bad-year chance", "baseline_change": "Baseline change %", "baseline_bad": "Baseline bad-year chance"})
     show(table, {"Our change %": "+.1f", "Low %": "+.1f", "High %": "+.1f", "Our bad-year chance": ".0%", "Baseline change %": ".1f", "Baseline bad-year chance": ".0%"})
     st.subheader(t("Cost of replacing shortfalls with imports"))

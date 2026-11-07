@@ -112,30 +112,33 @@ def advice(outputs, region, crop, story):
         rules.append(dict(rule=rule, decision=decision, text=text, evidence=evidence, values=values))
 
     if theme[WARMTH] <= -0.01:
-        add("variety_warmth", "Variety trials", "Warmer seasons cut this crop's yield by about {effect} in the model. Add heat tolerance to the test-farm variety trials for this crop.", MODEL, effect=(-theme[WARMTH], ".1%"))
+        add("variety_warmth", "Variety work", "Warmer, shorter seasons cut this crop's yield by about {effect} in the model. Include season length and heat tolerance in variety work for this crop.", MODEL, effect=(-theme[WARMTH], ".1%"))
     if season["maturity_days_earlier"] >= 5:
         add("calendar", "Sowing and harvest calendar", "The crop reaches maturity about {days} days earlier. Review the sowing guidance and harvest capacity dates before this becomes routine.", ASSUMED, days=(season["maturity_days_earlier"], ".0f"))
-    if crop == "pea":
-        add("pea_stagger", "Sowing and harvest calendar", "Pea sowing is staggered by up to a month so that fields don't all ripen together. Check that the same gap still spreads the harvest in warmer seasons.", EXPERT)
+    if region == "FI_SW" and crop == "pea":
+        add("pea_stagger", "Sowing and harvest calendar", "Pea sowing can be staggered by up to about a month so that fields don't all ripen together. Check that the same gap still spreads the harvest in warmer seasons.", EXPERT)
     if theme[WATER] >= 0.01:
-        add("water_offset", "Risk planning", "Extra water adds back about {effect} in the model, but it depends on this scenario's rainfall. Keep drought plans in place rather than counting on it.", MODEL, effect=(theme[WATER], ".1%"))
+        add("water_offset", "Risk planning", "Water measures add back about {effect} in the model, even though season rain falls or stays flat, because a shorter season loses less water overall. Keep drought plans in place rather than counting on it.", MODEL, effect=(theme[WATER], ".1%"))
     if crop == "potato" and season["wet_days"] - season["wet_days_today"] >= 2:
         add("disease", "Crop protection guidance", "Warm, wet days rise from {today} to {future} a year, which can favour blight. Review the disease guidance for potato.", ASSUMED, today=(season["wet_days_today"], ".0f"), future=(season["wet_days"], ".0f"))
-    if risk.p_bad_year >= 0.10:
-        seen = outputs["bad_check"].query("region == @region and crop == @crop").iloc[0]
-        add("bad_years", "Contract planning", "The model gives about a {chance} chance of a bad year, against {seen} in the seasons observed so far. It tends to run high for this crop, so use it to discuss contract area buffers, not to set them.", MODEL, chance=(risk.p_bad_year, ".0%"), seen=(seen.observed_bad, ".0%"))
+    seen = outputs["bad_check"].query("region == @region and crop == @crop").iloc[0]
+    if risk.p_bad_year - seen.p_bad_today >= 0.02:
+        add("bad_years", "Contract planning", "The model's chance of a bad year rises from {today} to {future}. Bad seasons so far: {seen} of {seasons}, so use this to discuss contract area buffers, not to set them.", MODEL,
+            today=(seen.p_bad_today, ".0%"), future=(risk.p_bad_year, ".0%"), seen=(round(seen.observed_bad * seen.seasons), "d"), seasons=(int(seen.seasons), "d"))
     if cost.added_vs_todays_climate_eur_yr >= 10000:
         add("replacement_cost", "Replacement buying", "Replacing shortfalls with imports could add about {cost} a year. Review the buying plan for this crop first.", MODEL, cost=(cost.added_vs_todays_climate_eur_yr, "eur"))
     if region == "SE_SKANE":
         i = outputs["irrigation"].query("region == @region and crop == @crop").iloc[0]
         top = outputs["irrigation_seasons"].sort_values("uplift_pct", ascending=False).head(2)
-        add("irrigation", "Water planning", "On farms that switch practice, irrigated peas yield about {uplift} more, and the gap is largest in seasons such as {year1} ({gap1}) and {year2} ({gap2}). Plan water access for those years, and check that the water will be available.", MEASURED,
+        add("irrigation", "Water planning", "On farms that switch practice, irrigated peas yield about {uplift} more, and the gap is largest in poor seasons such as {year1} ({gap1}) and {year2} ({gap2}). These can't be predicted, so water access has to be arranged beforehand, and its availability checked.", MEASURED,
             uplift=(i.within_farm_uplift_pct / 100, ".0%"), year1=(int(top.year.iloc[0]), "d"), gap1=(top.uplift_pct.iloc[0] / 100, "+.0%"), year2=(int(top.year.iloc[1]), "d"), gap2=(top.uplift_pct.iloc[1] / 100, "+.0%"))
     else:
-        add("irrigation_gap", "Data to collect", "No Finnish farm switches between irrigating and not, so the data can't show what irrigation is worth here. A small on-farm trial would answer it.", GAP)
+        add("irrigation_gap", "Data to collect", "No Finnish farm switches between irrigating and not, so the data can't show what irrigation is worth here. If it's being considered, a small on-farm trial would answer it.", GAP)
     p = outputs["policy"].query("scenario == @story and year == 2050").iloc[0]
     use = outputs["inputs"].loc[(region, crop)]
-    add("input_costs", "Costs and contract prices", "By 2050 this scenario has fertiliser at {fertiliser}, diesel at {diesel} and carbon at {carbon} a tonne. This crop uses about {n} kg of mineral nitrogen and {fuel} l of diesel per hectare, so include this in contract price talks.", ILLUSTRATIVE,
+    costs = {"below_2c": "By 2050 this scenario has fertiliser at {fertiliser}, diesel at {diesel} and carbon at {carbon} a tonne. This crop uses about {n} kg of nitrogen and {fuel} l of diesel per hectare, so include this in contract price talks.",
+             "current_policies": "Policy adds little in this scenario: by 2050 fertiliser is at {fertiliser}, nearly all of it by 2027, with diesel at {diesel} and carbon at {carbon} a tonne. This crop uses about {n} kg of nitrogen and {fuel} l of diesel per hectare."}
+    add("input_costs", "Costs and contract prices", costs[story], ILLUSTRATIVE,
         fertiliser=(p.n_fertiliser_price_index - 1, "+.0%"), diesel=(p.diesel_price_index - 1, "+.0%"), carbon=(float(p.carbon_price_eur_t), "eur"), n=(use.n_mineral_kg_ha, ".0f"), fuel=(use.diesel_l_ha, ".0f"))
     add("record_data", "Data to collect", "Sowing date and variety aren't recorded in the data, so we can't say which sowing date or variety does best. Adding both to the farm survey would make that possible.", GAP)
     return rules
