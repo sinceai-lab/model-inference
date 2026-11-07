@@ -12,6 +12,8 @@ from starlette.concurrency import run_in_threadpool
 
 import service  # noqa: F401
 from service.engine import REGIONS, SCENARIOS, UnknownInput
+from service.insights import Insights
+from service.insights_api import router as insights_router, what_if
 from service.ngsi import PayloadError
 from service.pipeline import LiveService
 
@@ -86,12 +88,14 @@ class FieldRequest(BaseModel):
 @asynccontextmanager
 async def lifespan(app):
     app.state.live = LiveService()
+    app.state.insights = Insights(app.state.live.engine)
     app.state.live.start()
     yield
     app.state.live.stop()
 
 
 app = FastAPI(title="Apetit live season backend", lifespan=lifespan)
+app.include_router(insights_router)
 
 
 @app.exception_handler(RequestValidationError)
@@ -140,6 +144,12 @@ def predict_field(req: FieldRequest, request: Request):
         return live(request).engine.predict_field(req.parcel_id, req.crop, req.scenario, req.year, req.irrigation)
     except UnknownInput as e:
         raise HTTPException(404, detail=str(e))
+
+
+@app.post("/insights/what-if")
+def insights_what_if(req: FieldRequest, request: Request):
+    """POST /predict/field's response as `prediction`, plus what the Try page needs. See docs/INSIGHTS_API.md section 7.2."""
+    return what_if(request, req)
 
 
 @app.get("/predictions")
