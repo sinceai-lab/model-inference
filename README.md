@@ -29,6 +29,7 @@ It is built for Apetit's farming team and advisors, following the Q&A session (b
 |---|---|
 | **Risk and advice** | Two futures for a crop, what drives the change, how the season shifts, policy costs and draft actions |
 | **Farm and fields** | One farm's fields compared by soil, modelled yield and crop plan |
+| **Map** | Which farms to contact first: farms and fields by crop, soil and climate story, with draft actions. Run `python build_map_data.py` in `src/` after `run_all.py`. Read `docs/MAP_ASSESSMENT.md` for what it can and can't claim |
 | **All crops** | The 2027–2031 forecast, every crop's yield change and the replacement cost |
 | **Try the model** | Runs the trained model live for any field and season, and shows why it landed on that number |
 | **Can we trust this?** | The baseline against our model on held-out seasons |
@@ -102,6 +103,8 @@ Code, submission files, result tables and research notes (`docs/CLAUDE_insights_
 | `C3_euro_risk.csv` | Replacement cost per region, crop and scenario |
 | `C3_irrigation_evidence.csv`, `C3_irrigation_se_within_farm.csv` | Irrigation effect and where it can be measured |
 | `advisor_drivers.csv`, `advisor_season_shift.csv` | What drives each yield change, and how the season shifts per scenario |
+| `map_farms.csv`, `map_soil_effects.csv`, `map_land.json` | What the Map tab draws. The coastline is simplified Natural Earth data (public domain) |
+| `map_evidence_*.csv` | Weather noise against grid-cell differences, the sand gap and farm clustering |
 | `backtest_pea_models.csv` | Separate and shared pea weather responses on held-out seasons |
 | `yield_corrections_log.csv` | Every yield correction or exclusion, with its rule |
 | `stage_parameter_test.csv` | Held-out test of the changed crop-stage values |
