@@ -12,7 +12,7 @@ Each version is a branch that can be run or rolled back to. Later versions may d
 
 | Version | Branch | Commit | What it adds | Tested state |
 |---|---|---|---|---|
-| v1 | `main` | `61465a5` | Pipeline, first viewer, English and Finnish | Runs, but predates Apetit's feedback |
+| v1 | None here; use the commit | `61465a5` | Pipeline, first viewer, English and Finnish | Runs, but predates Apetit's feedback |
 | v2 | `inference-v2-QA-suggestions` | `9f9383a` | Viewer rebuilt around Apetit's Q&A: advice, farm pages, trust tab | Reviewed and tested |
 | v3 | `inference-v3` | Latest on the branch | Data fixes, crop-stage fixes, live backend and mock broker, Map tab, broker handoff | Tests pass; **not yet run against a real broker** |
 
@@ -28,6 +28,7 @@ Inside v3, each feature is a separate merge commit:
 
 ```bash
 git checkout inference-v2-QA-suggestions       # run an earlier version
+git checkout 61465a5                           # v1, which has no branch in the team repo
 git revert -m 1 50ed4b5                        # remove one feature from the current branch, here the map
 ```
 
