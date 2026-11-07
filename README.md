@@ -13,6 +13,7 @@ cd src
 python features.py   # crop-stage weather features
 python dataset.py    # clean yields and corrections log
 python backtest.py   # per-crop model comparison
+python stage_test.py # optional: held-out test of the crop-stage values
 python run_all.py    # submissions, risk tables and checks
 ```
 
@@ -55,6 +56,7 @@ Code, submission files, result tables and research notes (`docs/CLAUDE_insights_
 | `advisor_drivers.csv`, `advisor_season_shift.csv` | What drives each yield change, and how the season shifts per scenario |
 | `backtest_pea_models.csv` | Separate and shared pea weather responses on held-out seasons |
 | `yield_corrections_log.csv` | Every yield correction or exclusion, with its rule |
+| `stage_parameter_test.csv` | Held-out test of the changed crop-stage values |
 | `model_coefficients.csv` | Weather, soil and trend effects per crop (standardised) |
 | `backtest_summary.csv`, `backtest_per_crop_grid.csv` | Model performance |
 | `climate_extremes_check.csv` | Rainfall variability, history against scenarios |
@@ -63,7 +65,7 @@ Code, submission files, result tables and research notes (`docs/CLAUDE_insights_
 
 1. **Yields.** One row per farm, crop and year, from three sources:
    * Finnish survey, with 18 yields corrected as ×10 decimal slips.
-   * ERP deliveries for farms that didn't respond, divided by the measured delivered-to-yield ratio. 8 implausible values were excluded.
+   * ERP deliveries for farms that didn't respond, divided by the measured delivered-to-yield ratio. A unit price far from the fixed contract price identifies 31 quantity slips, which are corrected, and shipment weights confirm each one. 12 repeat postings are removed, and 11 returns aren't subtracted because the goods were harvested.
    * The Swedish grower file. It assumes the Finnish pea delivered-to-yield ratio.
 2. **Weather features.** For each grid cell, year, crop and soil: sowing date, crop stages from growing degree days, a soil-water balance, drought stress by stage, heat days, rain after sowing and before harvest, blight-favourable days and May temperature.
 3. **Model.** One penalised regression per crop: `log(yield) = farm effect + trend + soil + irrigation + weather`. It uses no same-year farm inputs, because those aren't known for future seasons.
@@ -78,22 +80,22 @@ Scores use the official formula on farm-level rows, not the hidden parcel-level 
 
 | Test | Scorer-style score | Aggregate error | Parcel-style error |
 |---|---:|---:|---:|
-| Farm average, leave one year out | 38.0 | 11.0 % | 0.158 |
-| Final model, leave one year out | 64.6 | 5.6 % | 0.115 |
-| Final model, forward 2022–2026 | 65.6 | 5.4 % | 0.113 |
+| Farm average, leave one year out | 38.1 | 11.0 % | 0.157 |
+| Final model, leave one year out | 71.1 | 4.2 % | 0.107 |
+| Final model, forward 2022–2026 | 71.9 | 4.0 % | 0.106 |
 
-Settings were chosen using the same seasons, so these figures are mildly optimistic.
+Settings were chosen using the same seasons, so these figures are optimistic. Pea maturity and turnip rape's sensitive stage were set from these seasons too. When those values are chosen without the season being scored (`stage_test.py`), production error is 3.3–4.5 % for those crops instead of 2.1–4.5 %, against 5.1–7.4 % before the change.
 
 ### 2041–2060 yield change against 1991–2020
 
 | Region and crop | SSP1-2.6 | SSP2-4.5 | SSP5-8.5 | Range at SSP5-8.5 | Confidence |
 |---|---:|---:|---:|---:|---|
-| Finland, turnip rape | −1.3 % | −3.2 % | −5.4 % | −8.7 to −3.9 | Medium |
+| Finland, turnip rape | −1.7 % | −2.8 % | −4.0 % | −5.7 to −2.6 | Medium |
 | Finland, spinach | −0.8 % | −2.3 % | −3.7 % | −6.2 to −2.7 | Low to medium: few farms |
-| Finland, potato | +1.4 % | −0.3 % | −1.6 % | −3.7 to +0.5 | Low to medium: few farms |
-| Finland, carrot | 0.0 % | −0.4 % | −1.3 % | −4.1 to +0.9 | Low: few farms |
-| Finland, pea | +0.4 % | +0.3 % | +0.5 % | −1.5 to +3.1 | Low: sign changes with model choice |
-| Sweden, pea | +5.3 % | +5.1 % | +4.4 % | +2.1 to +7.0 | Low: 9 seasons |
+| Finland, potato | +1.4 % | −0.2 % | −1.5 % | −3.6 to +0.6 | Low to medium: few farms |
+| Finland, carrot | +0.1 % | −0.4 % | −1.3 % | −4.3 to +0.7 | Low: few farms |
+| Finland, pea | +0.6 % | +0.7 % | +1.5 % | −1.8 to +3.3 | Low: sign changes with model choice |
+| Sweden, pea | +5.4 % | +5.2 % | +5.0 % | +1.4 to +6.4 | Low: 9 seasons |
 
 Confidence labels are our judgment. Ranges only show sensitivity to dropping one training season, not total uncertainty.
 
@@ -101,10 +103,10 @@ Confidence labels are our judgment. Ranges only show sensitivity to dropping one
 
 | Region | Today's climate | SSP1-2.6 | SSP2-4.5 | SSP5-8.5 |
 |---|---:|---:|---:|---:|
-| Finland, € a year | 275,000 | 271,000 | 307,000 | 344,000 |
-| Sweden, € a year (low confidence) | 183,000 | 112,000 | 125,000 | 135,000 |
+| Finland, € a year | 257,000 | 252,000 | 291,000 | 326,000 |
+| Sweden, € a year (low confidence) | 157,000 | 88,000 | 99,000 | 112,000 |
 
-* Of the €69,000 a year Finland adds under SSP5-8.5, spinach accounts for €47,000 and potato for €14,000.
+* Of the €69,000 a year Finland adds under SSP5-8.5, spinach accounts for €47,000 and potato for €13,000.
 * Normal weather variation already costs more than climate change adds, even under the highest scenario.
 * Turnip rape shows the largest yield decline but a small cost, because its replacement premium is only 8 %.
 
@@ -133,10 +135,11 @@ Only Swedish peas can measure this, because 167 farms there switch between irrig
 * **Field differences.** Models train on farm averages, so differences between fields rest mainly on the soil map.
 * **Sowing estimate.** It uses temperature alone and is capped at 10 April. Roughly a quarter of historical pea years hit the cap in Finland and over 70% in Sweden, so the shift is a minimum and isn't shown for Swedish peas.
 * **Policy prices.** The carbon, fertiliser and diesel paths are the package's illustrative values, not forecasts.
-* **Assumed parameters.** Soil water capacities, crop stage thresholds and maturity values are our assumptions, not package values.
+* **Assumed parameters.** Soil water capacities, crop stage thresholds and maturity values are our assumptions, not package values. Held-out seasons support changing two: pea maturity (750 to 850 degree days) and turnip rape's sensitive stage (350–600 to 455–780). Soil water and the three small crops' stages showed no consistent gain, so they stay as assumed. Season error and bad-year rates are measured with the two tuned values, so they may be slightly low.
 * **Limited history.** There are 15 Finnish and 9 Swedish seasons, with weather largely shared within a region. Small crops have few farms.
 * **Heat extrapolation.** Hot days in the potato and carrot seasons in south-west Finland rise from about 3.5 to 11–12 a year under SSP5-8.5. A mostly linear response fitted to cooler seasons may understate damage. How far this leaves the training range has only been checked for Swedish peas so far.
-* **Bad-year rates.** Modelled rates are above observed for peas and turnip rape (for example 14 % against 7 % for Finnish peas). They are based on few seasons.
+* **Bad-year rates.** Modelled rates are above observed for peas and turnip rape (for example 13 % against 7 % for Finnish peas). They are based on few seasons.
+* **Swedish delivered ratio.** The file has no reported yields to compare, so the Finnish pea ratio can't be tested there. It changes Swedish yield levels by up to 2.5 %, not the percentage changes.
 * **Swedish signal.** The climate signals file has no regional split, so the same signals are applied to both regions.
 * **Not modelled.** CO2 fertilisation and adaptation are not in the data. Water availability for irrigation is not assessed.
 * **Euro risk.** Uses 2025 prices and counts only the premium paid on replaced volume. It excludes replacement-import emissions, lost margin, price shocks and what Apetit still pays farmers after a poor crop.

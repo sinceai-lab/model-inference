@@ -1,0 +1,13 @@
+crop,region,test,arm,production_error,yield_error
+pea,FI_SW,loyo,old value,0.0744,0.1408
+pea,FI_SW,loyo,chosen on other seasons,0.044,0.1167
+pea,SE_SKANE,loyo,old value,0.0583,0.1286
+pea,SE_SKANE,loyo,chosen on other seasons,0.0385,0.118
+pea,FI_SW,forward,old value,0.0662,0.1359
+pea,FI_SW,forward,chosen on other seasons,0.0449,0.1173
+pea,SE_SKANE,forward,old value,0.0508,0.132
+pea,SE_SKANE,forward,chosen on other seasons,0.0376,0.1244
+turnip_rape,FI_SW,loyo,old value,0.067,0.1341
+turnip_rape,FI_SW,loyo,chosen on other seasons,0.0333,0.1112
+turnip_rape,FI_SW,forward,old value,0.064,0.1293
+turnip_rape,FI_SW,forward,chosen on other seasons,0.0331,0.1158
