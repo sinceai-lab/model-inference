@@ -58,8 +58,6 @@ FI = {
     "Method": "Menetelmä",
     "Error": "Virhe",
     "How the yield data was cleaned": "Miten satoaineisto puhdistettiin",
-    "{fixed} survey yields were corrected as ×10 slips and {excluded} delivery-based yields were excluded as implausible. Every change is listed with its rule.":
-        "{fixed} kyselyn satolukemaa korjattiin kymmenkertaisina desimaalivirheinä, ja {excluded} toimituksiin perustuvaa satolukemaa jätettiin pois epäuskottavina. Jokainen muutos on listattu sääntöineen.",
     "Record": "Tietue",
     "Data field": "Tietokenttä",
     "Old value": "Vanha arvo",
@@ -67,7 +65,6 @@ FI = {
     "Rule": "Sääntö",
     "Source": "Lähde",
     "above 3x crop median; treated as a x10 decimal slip": "yli 3 x kasvin mediaani; käsitelty kymmenkertaisena desimaalivirheenä",
-    "ERP-derived yield outside 0.35-2.2x crop-year median; excluded": "ERP-pohjainen sato kasvin vuosimediaanin 0,35–2,2-kertaisen välin ulkopuolella; jätetty pois",
     # Season by season
     "The **baseline stays nearly flat**. The test of our model is whether it follows the good and bad seasons. Every point below is a prediction for a season held out of training.":
         "**Vertailutaso pysyy lähes tasaisena.** Oman mallin testi on se, seuraako se hyviä ja huonoja kausia. Jokainen alla oleva piste on ennuste kaudelle, joka jätettiin pois opetuksesta.",
@@ -317,6 +314,13 @@ FI = {
     "Entity": "Kohde",
     "The live data couldn't be read. Trying again shortly.": "Kuluvan kauden tietoja ei voitu lukea. Yritetään pian uudelleen.",
     # ---------------------------------------------------------------- End of Live season tab
+    "{survey} survey yields were corrected as ×10 slips, and {erp} ERP delivery lines were corrected, kept or excluded. {used} of these changes affect a training yield; the others fall on farms that use their survey answer. Every change is listed with its rule.": "{survey} kyselyn satolukemaa korjattiin kymmenkertaisina desimaalivirheinä, ja {erp} ERP-toimitusriviä korjattiin, säilytettiin tai jätettiin pois. {used} näistä muutoksista vaikuttaa opetuksessa käytettyyn satoon; muut koskevat tiloja, joilla käytetään kyselyvastausta. Jokainen muutos on listattu sääntöineen.",
+    "Used in training": "Käytössä opetuksessa",
+    "repeat posting of the same goods receipt (same lot, quantity and amount); excluded": "saman tavaran vastaanoton toistuva kirjaus (sama erä, määrä ja summa); jätetty pois",
+    "return to supplier is a legitimate credit, but the goods were harvested; not subtracted from the yield": "palautus toimittajalle on aito hyvitys, mutta sato korjattiin; ei vähennetä sadosta",
+    "unit price 0.1x the crop-year contract price; decimal slip, quantity /10": "yksikköhinta 0,1 x kasvin vuoden sopimushinta; desimaalivirhe, määrä /10",
+    "unit price 1000x the crop-year contract price; tonnes keyed as kg, quantity x1000": "yksikköhinta 1000 x kasvin vuoden sopimushinta; tonnit kirjattu kiloina, määrä x1000",
+    "unit price 10x the crop-year contract price; decimal slip, quantity x10": "yksikköhinta 10 x kasvin vuoden sopimushinta; desimaalivirhe, määrä x10",
 }
 
 # ---------------------------------------------------------------- Map tab (map_tab.py). Kept apart so other work on this file doesn't collide with it.

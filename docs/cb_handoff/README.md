@@ -77,15 +77,15 @@ All models are in one file, `cache/models.pkl`, rebuilt by `src/run_all.py`. It 
 
 | Crop | Regions | Key, 2027–2031 | Key, after 2031 | Example result |
 |---|---|---|---|---|
-| Pea | Finland and Sweden, one shared model | `models["pea"]` | `long_models["pea"]` | 3.924 (Finland), 2.792 (Sweden) |
-| Turnip rape | Finland | `models["turnip_rape"]` | `long_models["turnip_rape"]` | 1.062 |
-| Potato | Finland | `models["potato"]` | `long_models["potato"]` | 22.045 |
-| Carrot | Finland | `models["carrot"]` | `long_models["carrot"]` | 65.991 |
+| Pea | Finland and Sweden, one shared model | `models["pea"]` | `long_models["pea"]` | 4.056 (Finland), 2.801 (Sweden) |
+| Turnip rape | Finland | `models["turnip_rape"]` | `long_models["turnip_rape"]` | 1.056 |
+| Potato | Finland | `models["potato"]` | `long_models["potato"]` | 22.025 |
+| Carrot | Finland | `models["carrot"]` | `long_models["carrot"]` | 65.849 |
 | Spinach | Finland | `models["spinach"]` | `long_models["spinach"]` | 25.162 |
 
 ## What each model receives
 
-The backend builds this row, and the broker doesn't send it. `model_input_examples.csv` has one complete row per model, plus Swedish pea. Each row was checked: loaded from the CSV and run through the saved model, it matches the submitted C1 prediction to within 0.002 t/ha.
+The backend builds this row, and the broker doesn't send it. `model_input_examples.csv` has one complete row per model, plus Swedish pea. Each row was checked: loaded from the CSV and run through the saved model, it matches the submitted C1 prediction to within 0.002 t/ha. `python build_handoff_examples.py` in `src/` regenerates and rechecks them after retraining, so these predictions change whenever the models do, while the broker format doesn't.
 
 | Column | Meaning | Comes from |
 |---|---|---|
@@ -113,7 +113,7 @@ import pickle, numpy as np, pandas as pd
 models = pickle.load(open("../cache/models.pkl", "rb"))["models"]
 rows = pd.read_csv("../docs/cb_handoff/model_input_examples.csv")
 row = rows.iloc[[0]]
-print(np.exp(models[row.model_key.iloc[0]].predict_log(row))[0])  # about 3.924 t/ha
+print(np.exp(models[row.model_key.iloc[0]].predict_log(row))[0])  # about 4.056 t/ha
 ```
 
 ## Questions for the broker owner

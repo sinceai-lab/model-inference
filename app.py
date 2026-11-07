@@ -272,8 +272,8 @@ with tab_compare:
         st.markdown(t("Apetit told us this score doesn't affect their decision. On this test, the official formula gives our model {model} and the baseline {base}. It's applied to farm-level rows while the hidden answers are per field, so expect the real score to be lower.", model=num(mm["score"], ".1f"), base=num(mb["score"], ".1f")))
     with st.expander(t("How the yield data was cleaned")):
         log = load("yield_corrections_log.csv")
-        st.markdown(t("{fixed} survey yields were corrected as ×10 slips and {excluded} delivery-based yields were excluded as implausible. Every change is listed with its rule.", fixed=log.new_value.notna().sum(), excluded=log.new_value.isna().sum()))
-        show(log.assign(rule=log.rule.map(t)).rename(columns={"record_key": "Record", "field": "Data field", "old_value": "Old value", "new_value": "New value", "rule": "Rule", "source": "Source"}), {"Old value": ".2f", "New value": ".2f"})
+        st.markdown(t("{survey} survey yields were corrected as ×10 slips, and {erp} ERP delivery lines were corrected, kept or excluded. {used} of these changes affect a training yield; the others fall on farms that use their survey answer. Every change is listed with its rule.", survey=(log.source == "farm_survey_fi.csv").sum(), erp=(log.source != "farm_survey_fi.csv").sum(), used=log.used_for_yield.sum()))
+        show(log.assign(rule=log.rule.map(t)).rename(columns={"record_key": "Record", "field": "Data field", "old_value": "Old value", "new_value": "New value", "rule": "Rule", "source": "Source", "used_for_yield": "Used in training"}), {"Old value": ".2f", "New value": ".2f"})
 
 # ---------------------------------------------------------------- 2
 with tab_season:

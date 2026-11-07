@@ -18,6 +18,16 @@
         "type": "Property",
         "value": "GF0104"
       },
+      "location": {
+        "type": "GeoProperty",
+        "value": {
+          "type": "Point",
+          "coordinates": [
+            22.625,
+            60.975
+          ]
+        }
+      },
       "temperature": {
         "type": "Property",
         "value": 14.4,

@@ -35,7 +35,7 @@ def test_evaporation_can_be_left_out(cells):
 
 
 def test_mock_sends_the_contract_attributes():
-    e = weather_entity("GF0104", "2027-06-15", 14.4, 21.3, None, 0.0, 4.62)
+    e = weather_entity("GF0104", "2027-06-15", 14.4, 21.3, None, 0.0, 4.62, lat=60.975, lon=22.625)
     want = json.loads((FIXTURES / "notification_example.json").read_text())["data"][0]
     assert {k: v for k, v in e.items() if k != "source"} == want
 
@@ -60,9 +60,12 @@ def test_example_model_rows_match_through_predict(engine, i):
     assert engine.predict_row(row, r.model_group)["yield_t_ha"] == pytest.approx(r.expected_yield_t_ha, abs=0.002)
 
 
-def test_example_subscription_needs_plain_json_on_a_compliant_broker():
-    """It has no @context, so application/ld+json must be refused. As application/json it uses the default context."""
+def test_example_subscription_is_accepted_once_its_placeholders_are_filled():
+    """It carries @context, so it's sent as application/ld+json. Without one, a compliant broker refuses that content type."""
     body = (FIXTURES / "subscription_example.json").read_text().replace("BACKEND_HOST", "127.0.0.1")
     c = TestClient(create_app(Broker()))
-    assert c.post("/ngsi-ld/v1/subscriptions", content=body, headers={"Content-Type": "application/ld+json"}).status_code == 400
-    assert c.post("/ngsi-ld/v1/subscriptions", content=body, headers={"Content-Type": "application/json"}).status_code == 201
+    assert c.post("/ngsi-ld/v1/subscriptions", content=body, headers={"Content-Type": "application/ld+json"}).status_code == 201
+    no_context = json.loads(body)
+    del no_context["@context"]
+    no_context["id"] += ":2"
+    assert c.post("/ngsi-ld/v1/subscriptions", content=json.dumps(no_context), headers={"Content-Type": "application/ld+json"}).status_code == 400

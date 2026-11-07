@@ -77,17 +77,9 @@ Send it as `POST /ngsi-ld/v1/subscriptions` with `Content-Type: application/ld+j
 - **Don't set `throttling` or `timeInterval`.** Each can drop days, which then get filled with typical weather. Per the spec, each update should give its own notification.
 - **Update all of a day's attributes at once.** A notification holds the entity as it stands, so a date updated apart from its values would store the previous day's values under the new date. A later update corrects it only if a notification fires for it.
 
-### Differences from the handoff examples
+### Handoff examples
 
-| Handoff example | Here | Why |
-|---|---|---|
-| `subscription_example.json` has no `@context` | Adds `@context` | Without it, a compliant broker refuses `application/ld+json` with 400 (clause 6.3.5, enforced by the mock too). As `application/json` it's accepted but uses the default context, so `WeatherObserved` only matches if your entities use the default context too |
-| It has `watchedAttributes: ["dateObserved"]` | Leaves it out | A correction to a day's values doesn't change `dateObserved`, so it may never be notified. Please confirm how your broker behaves. The backend works with either |
-| `notification_example.json` has no `location` | Sent by the mock, and recommended | Required by the Smart Data Models schema. The backend doesn't need it when `cellId` is present |
-| README says the models use 1 March to the end of October | Day of year 60–300: 1 March to 27 October, or 29 February to 26 October in a leap year | Readings outside that are stored but don't affect estimates |
-| README says missing days get typical weather | Also: gaps of up to 3 days get interpolated temperature and PET, and threshold counts use historical chances | See below |
-| README marks temperature and rain as required | Partial readings are accepted and reported | One missing value shouldn't lose a day |
-| Its model table leaves out `soil_clay` | `POST /predict` requires it | The model doesn't read it, but the row is checked for exactly one soil. Everything else matches: the 6 rows of `model_input_examples.csv` reproduce through the backend, and `daily_weather_example.csv` sent as notifications gives its expected 3.924 t/ha |
+`docs/cb_handoff` is the contract. Two details differ on purpose: the backend accepts partial readings and reports what it filled, and `POST /predict` requires `soil_clay` even though the model doesn't read it.
 
 `tests/test_handoff_contract.py` runs the examples, using a copy in `tests/fixtures/cb_handoff`.
 

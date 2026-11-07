@@ -7,14 +7,12 @@
       "type": "WeatherObserved"
     }
   ],
-  "watchedAttributes": [
-    "dateObserved"
-  ],
   "notification": {
     "format": "normalized",
     "endpoint": {
       "uri": "http://BACKEND_HOST:8600/notify",
       "accept": "application/json"
     }
-  }
+  },
+  "@context": "THE_CONTEXT_YOUR_WEATHER_ENTITIES_USE"
 }

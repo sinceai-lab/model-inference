@@ -1,5 +1,7 @@
 # Apetit Track C: climate risk to farming
 
+**New here, human or agent? Start with [PROJECT_GUIDE.md](PROJECT_GUIDE.md).** It covers setup, how to run everything, versions and how to roll back, and how to change things safely.
+
 Forecasts contract-crop yields for 2027–2031, estimates 2041–2060 yield risk by climate scenario, and converts the risk to euros. All data is synthetic, so results must not be presented as Apetit's actual figures or as facts about real farms.
 
 **Status:** working first version. The submission files pass format checks, but C1 and C2 have no public answer key, so their true scores are unknown.
@@ -7,7 +9,7 @@ Forecasts contract-crop yields for 2027–2031, estimates 2041–2060 yield risk
 ## Run it
 
 ```bash
-python -m venv venv && source venv/bin/activate
+python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 cd src
 python features.py   # crop-stage weather features
@@ -23,7 +25,7 @@ To open the viewer, run this from the project folder after `run_all.py`:
 streamlit run app.py
 ```
 
-It is built for Apetit's farming team and advisors, following the Q&A session (branch `inference-v2-QA-suggestions`):
+It is built for Apetit's farming team and advisors, following the Q&A session:
 
 | Tab | Purpose |
 |---|---|
@@ -74,14 +76,14 @@ Past seasons replayed with later days hidden, on models that didn't train on the
 
 | Weather known until | Farm average | Estimate | Estimate with plain threshold counts | Crop seasons where the estimate beats the farm average |
 |---|---:|---:|---:|---:|
-| None (typical weather only) | 11.0 % | 10.6 % | 14.0 % | 62 % |
-| 15 May | 11.0 % | 10.9 % | 13.2 % | 48 % |
-| 1 June | 11.0 % | 10.9 % | 12.6 % | 50 % |
-| 15 June | 11.0 % | 9.8 % | 11.7 % | 64 % |
-| 1 July | 11.0 % | 7.7 % | 10.5 % | 68 % |
-| 15 July | 11.0 % | 6.1 % | 8.2 % | 70 % |
-| 1 August | 11.0 % | 5.5 % | 6.6 % | 70 % |
-| Whole season | 11.0 % | 5.6 % | 5.6 % | 71 % |
+| None (typical weather only) | 11.0 % | 10.5 % | 13.9 % | 61 % |
+| 15 May | 11.0 % | 10.9 % | 13.3 % | 51 % |
+| 1 June | 11.0 % | 11.0 % | 12.7 % | 55 % |
+| 15 June | 11.0 % | 9.8 % | 11.8 % | 64 % |
+| 1 July | 11.0 % | 7.7 % | 10.8 % | 69 % |
+| 15 July | 11.0 % | 5.3 % | 8.3 % | 77 % |
+| 1 August | 11.0 % | 4.2 % | 6.1 % | 76 % |
+| Whole season | 11.0 % | 4.2 % | 4.2 % | 75 % |
 
 * **Up to 1 June the estimate is no better than the farm average.** The gain starts in mid-June and is mostly complete by mid-July. Finnish pea is worse than the farm average until mid-June (17.8 % against 16.5 % on 1 June).
 * **The small early edge isn't from weather.** It's there with no weather at all, so it must come from the model's other terms, such as the technology trend and soil.
