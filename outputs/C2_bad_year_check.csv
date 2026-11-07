@@ -1,0 +1,7 @@
+region,crop,seasons,observed_bad,modelled_bad,season_error_sigma
+FI_SW,carrot,15,0.067,0.019,0.07
+FI_SW,pea,15,0.067,0.144,0.092
+FI_SW,potato,15,0.133,0.096,0.044
+FI_SW,spinach,15,0.0,0.003,0.063
+FI_SW,turnip_rape,15,0.067,0.164,0.088
+SE_SKANE,pea,9,0.0,0.077,0.073

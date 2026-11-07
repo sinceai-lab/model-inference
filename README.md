@@ -1,0 +1,123 @@
+# Apetit Track C: climate risk to farming
+
+Forecasts contract-crop yields for 2027–2031, estimates 2041–2060 yield risk by climate scenario, and converts the risk to euros. All data is synthetic, so results must not be presented as Apetit's actual figures or as facts about real farms.
+
+**Status:** working first version. The submission files pass format checks, but C1 and C2 have no public answer key, so their true scores are unknown.
+
+## Run it
+
+```bash
+python -m venv venv && source venv/bin/activate
+pip install -r requirements.txt
+cd src
+python features.py   # crop-stage weather features
+python dataset.py    # clean yields and corrections log
+python backtest.py   # per-crop model comparison
+python run_all.py    # submissions, risk tables and checks
+```
+
+To open the viewer, run this from the project folder after `run_all.py`:
+
+```bash
+streamlit run app.py
+```
+
+It compares the baseline with our model on held-out seasons, runs the trained model live for any field and season, and shows the future risk results. Trained models are saved in `cache/models.pkl`, and `src/inference.py` loads them.
+
+The code expects the package in the sibling folder `APETIT_CLIMATE_NATURE_NAVIGATOR_2026`. Set `APETIT_PACKAGE` to use another path. A full clean rerun gave byte-identical C1 and C2 files.
+
+## What is in this repository
+
+Code, submission files, result tables and research notes (`docs/CLAUDE_insights_abstract.md`, written before the Track C work began). The challenge data package is **not** included: download it separately and place it next to this folder. `.venv/` and `cache/`, including the trained models, are also left out; the steps above rebuild them.
+
+## Outputs (`outputs/`)
+
+| File | Content |
+|---|---|
+| `C1_yields_2027_2031_submission.csv` | Task C1 submission |
+| `C2_climate_yield_risk_submission.csv` | Task C2 submission |
+| `C2_detail_with_uncertainty.csv` | C2 with leave-one-season-out ranges and sensitivity runs |
+| `C2_bad_year_check.csv` | Bad-year method compared with observed history |
+| `C3_euro_risk.csv` | Replacement cost per region, crop and scenario |
+| `C3_irrigation_evidence.csv`, `C3_irrigation_se_within_farm.csv` | Irrigation effect and where it can be measured |
+| `C3_pea_hedge.csv` | Finland and Sweden as a two-region hedge for peas |
+| `yield_corrections_log.csv` | Every yield correction or exclusion, with its rule |
+| `model_coefficients.csv` | Weather, soil and trend effects per crop (standardised) |
+| `backtest_summary.csv`, `backtest_per_crop_grid.csv` | Model performance |
+| `climate_extremes_check.csv` | Rainfall variability, history against scenarios |
+
+## Method
+
+1. **Yields.** One row per farm, crop and year, from three sources:
+   * Finnish survey, with 18 yields corrected as ×10 decimal slips.
+   * ERP deliveries for farms that didn't respond, divided by the measured delivered-to-yield ratio. 8 implausible values were excluded.
+   * The Swedish grower file. It assumes the Finnish pea delivered-to-yield ratio.
+2. **Weather features.** For each grid cell, year, crop and soil: sowing date, crop stages from growing degree days, a soil-water balance, drought stress by stage, heat days, rain after sowing and before harvest, blight-favourable days and May temperature.
+3. **Model.** One penalised regression per crop: `log(yield) = farm effect + trend + soil + irrigation + weather`. It uses no same-year farm inputs, because those aren't known for future seasons.
+4. **Long-range risk.** Parcels are held at the 2025 mix, with 2025 technology and current irrigation. Future years combine the supplied 2041–2060 weather with 1991–2020 weather shifted by the package's climate signals, because only one realisation per scenario is supplied. Bad-year probabilities add the season error the model can't explain.
+5. **Euro risk.** Shortfall against today's average × 2025 contract price × replacement premium.
+
+## Results
+
+### Backtest
+
+Scores use the official formula on farm-level rows, not the hidden parcel-level truth. **Expect a lower real score**, especially for parcel-level error.
+
+| Test | Scorer-style score | Aggregate error | Parcel-style error |
+|---|---:|---:|---:|
+| Farm average, leave one year out | 38.0 | 11.0 % | 0.158 |
+| Final model, leave one year out | 64.6 | 5.6 % | 0.115 |
+| Final model, forward 2022–2026 | 65.6 | 5.4 % | 0.113 |
+
+Settings were chosen using the same seasons, so these figures are mildly optimistic.
+
+### 2041–2060 yield change against 1991–2020
+
+| Region and crop | SSP1-2.6 | SSP2-4.5 | SSP5-8.5 | Range at SSP5-8.5 | Confidence |
+|---|---:|---:|---:|---:|---|
+| Finland, turnip rape | −1.3 % | −3.2 % | −5.4 % | −8.7 to −3.9 | Medium |
+| Finland, spinach | −0.8 % | −2.3 % | −3.7 % | −6.2 to −2.7 | Low to medium: few farms |
+| Finland, potato | +0.8 % | −1.1 % | −2.7 % | −4.8 to −0.1 | Low to medium: few farms |
+| Finland, carrot | +0.1 % | −0.3 % | −1.2 % | −4.0 to +1.0 | Low: few farms |
+| Finland, pea | +0.4 % | +0.2 % | +0.5 % | −1.6 to +3.0 | Low: sign changes with model choice |
+| Sweden, pea | +5.2 % | +5.0 % | +4.4 % | +2.0 to +7.0 | Low: 9 seasons |
+
+Confidence labels are our judgment. Ranges only show sensitivity to dropping one training season, not total uncertainty.
+
+### Euro risk: replacing shortfalls with imports
+
+| Region | Today's climate | SSP1-2.6 | SSP2-4.5 | SSP5-8.5 |
+|---|---:|---:|---:|---:|
+| Finland, € a year | 275,000 | 273,000 | 311,000 | 349,000 |
+| Sweden, € a year (low confidence) | 183,000 | 113,000 | 125,000 | 136,000 |
+
+* Of the €74,000 a year Finland adds under SSP5-8.5, spinach accounts for €47,000 and potato for €18,000.
+* Normal weather variation already costs more than climate change adds, even under the highest scenario.
+* Turnip rape shows the largest yield decline but a small cost, because its replacement premium is only 8 %.
+
+### Irrigation
+
+Only Swedish peas can measure this, because 167 farms there switch between irrigating and not.
+
+* **Average uplift:** about 6 % within the same farm.
+* **By season:** 15 % in 2021, 13 % in 2023 and 10 % in 2026, against −0.1 % to 6 % in the other six seasons.
+* **Finland:** no farm switches, so the effect can't be separated from the farm. Irrigated farms' higher yields may have other causes.
+
+### Finland and Sweden as a pea hedge
+
+Over 9 shared seasons, the yield correlation is 0.55. Variability (coefficient of variation) is 14 % for Finland alone, 11 % for Sweden alone and 11 % combined. The worst combined year (83 % of average) is no better than Sweden's worst alone. **It's a modest hedge:** 2026 shows the two regions diverging, but 2021 and 2023 were poor in both.
+
+## Limits
+
+* **Assumed parameters.** Soil water capacities, crop stage thresholds and maturity values are our assumptions, not package values.
+* **Limited history.** There are 15 Finnish and 9 Swedish seasons, with weather largely shared within a region. Small crops have few farms.
+* **Heat extrapolation.** Hot days in south-west Finland rise from 3.5 to 13.5 a year under SSP5-8.5. A mostly linear response fitted to cooler seasons may understate damage. How far this leaves the training range has only been checked for Swedish peas so far.
+* **Bad-year rates.** Modelled rates are above observed for peas and turnip rape (for example 14 % against 7 % for Finnish peas). They are based on few seasons.
+* **Swedish signal.** The climate signals file has no regional split, so the same signals are applied to both regions.
+* **Not modelled.** CO2 fertilisation and adaptation are not in the data. Water availability for irrigation is not assessed.
+* **Euro risk.** Uses 2025 prices and counts only the premium paid on replaced volume. It excludes replacement-import emissions, lost margin and price shocks.
+* **Expert review.** No review workflow exists yet. The corrections log is ready to feed one.
+
+## Microsoft path
+
+Weather and farm files can load into a Fabric Lakehouse as bronze tables, with features and clean yields as silver and risk tables as gold. The scripts can run as Fabric notebooks. Corrections log approvals could run through Power Apps, and results could appear in Power BI.

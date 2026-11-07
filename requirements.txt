@@ -1,0 +1,7 @@
+numpy
+pandas
+pyarrow
+scipy
+scikit-learn
+streamlit==1.50.0
+altair

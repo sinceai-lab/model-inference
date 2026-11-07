@@ -1,0 +1,7 @@
+region,crop,farms_that_switch,farms,mean_yield_rainfed,mean_yield_irrigated,within_farm_uplift_pct,evidence
+FI_SW,carrot,0,12,44.491,54.018,,not measurable: no farm switches; between-farm gap is confounded
+FI_SW,pea,0,120,3.275,,,not measurable: no farm switches; between-farm gap is confounded
+FI_SW,potato,0,15,25.222,31.819,,not measurable: no farm switches; between-farm gap is confounded
+FI_SW,spinach,0,16,22.806,22.622,,not measurable: no farm switches; between-farm gap is confounded
+FI_SW,turnip_rape,0,230,1.458,,,not measurable: no farm switches; between-farm gap is confounded
+SE_SKANE,pea,167,300,3.377,3.575,5.96,within-farm comparison
